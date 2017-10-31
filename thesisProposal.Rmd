@@ -1,0 +1,80 @@
+---
+title: 'Thesis proposal: Longitudinal models of human mobility'
+author: "Boaz Sobrado"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  rmarkdown::pdf_document:
+    fig_caption: yes        
+    includes:  
+      in_header: tp2.tex
+
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+*Student Number:* 5891272
+*Supervisor Name:* Peter Lugtig
+*Word Count:* 676
+
+## Research Question
+
+How active people are and how they move around is correlated with health, income and social capital (Goodchild & Janelle, 2010). A better understanding of both within-person and between-person variability in geospatial patterns could be conducive to better social, health and urban-planning policies. Yet studies on human mobility are largely based on pen-and-paper travel diaries. These surveys have known methodological flaws, such as the short period of data collection (due to costs and burden to respondents), the underreporting of short trips (Wolf et al., 2013) and the underestimation of the duration of commutes (Delclòs-Alió et al. 2017).
+
+Longitudinal data on human movement has become available through smartphones. While there have been advances in combining and standardizing this information (Zheng, Zheng, Xie & Yang, 2010) extracting meaningful information remains a difficult task. As an illustration, *Figure 1* depicts a few hours in the life of the author with the raw measurements of an Android phone as well as smoothed measurements using a simple Kalman filter (commonly used by engineers for filtering noisy sensor measurements).
+
+![Raw GPS measurements of a journey from de Uithof to Tuinwijk on February 17th 2017. The measurements are in red, the filtered path is in blue. The circles denote 67% confidence intervals of the given GPS measurement. Measurements and fitted points which follow each other in time are connected by lines. The inaccurate measurements lead to estimates of irregular movements. The filtered movement estimate is less volatile, but lags behind the unfiltered movement.](Map1.png)
+
+Noisy data leads to inaccurate conclusions if not accounted for in analyses. The Kalman filter (and other state space models) improve these measurements somewhat, however they are limited by the fact that mobility is modeled on a Markov chain, which means that estimated location at timepoint $k$ is based only upon previous timepoint $k-1$. This assumption ignores common sense valuable information. For instance, most people spend the nights at home and the day at work.
+
+This project seeks to develop a new model for understanding and quantifying human mobility over time. The main question of interest is: given what we know about an individual's travel history (as measured through his or her phone) how well can we estimate their precise location? In other words, how do we minimise measurement error and deal with missing data in smartphone GPS measurements?
+
+## State of the Art
+
+Research with respect to the analysis of GPS data collected from living creatures is wide ranging, highly interdisciplinary and often serves different purposes. For instance, there is a vast literature of state space models of animal movements used by biologists and ecologists (Patterson et al. 2007). These models are primarily Markovian and are used to extract information about how the animal is interacting with the environment. For instance, short bird flights over a certain location can be identified as foraging trips whilst more directed trips are movements between foraging habitats.
+
+On the other hand, there is a body of literature from systems engineers which aim to identify how transport systems work as a whole. As of recently, these include machine learning methods such as feedback algorithms to solve the problem of travel mode classification , merging an individual's measured path with an actual path (known as *map matching*) and trip detection (e.g. Yang et al. 2016, Rassmussen et al. 2016). Due to the field's interest in the system rather than the individuals it often uninterested in individual level measurement error.
+
+Perhaps the most illustrative example of the challenges researchers face when analysing smartphone GPS data comes from a recent paper which aims to detect bipolar depression from GPS data (Palmis et al. 2017). Despite sophisticated feature extraction measures the authors use sub-optimal filtering and imputation methods, such as mean imputation. In fact, most researchers using GPS data find the data pre-processing challenging (Harari et al. 2016).
+
+## Approach
+
+Using travel logs and diaries, I will evaluate currently used families of movement models used in contemporary research in their ability to impute missing data. These include:
+
+1. State space models (such as the Kalman filter) which take measurement $k$, measurement accuracy, the previous measurement $k-1$ and time between measurements as parameters.
+
+2. Long range-persistence models, such as cascading walks models (e.g. Han et al. 2015) and the FarOut model (Sadilek & Krumm, 2012) which rely on self-similarity and autoregressive characteristics.  
+
+Moreover, I will compare the performance of these models with that of traditional missing data imputation techniques, such as multiple imputation.
+
+## Journals for Possible Publication
+
+Journal of the Royal Statistical Society: Series A or C, Computers, Environment and Urban Systems,Geojournal
+
+## References
+
+Delclòs-Alió, X., Marquet, O., & Miralles-Guasch, C. (2017). Keeping track of time: A Smartphone-based analysis of travel time perception in a suburban environment. Travel Behaviour and Society, 9(Supplement C), 1–9. https://doi.org/10.1016/j.tbs.2017.07.001
+
+D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1),144-161. URL http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf
+
+Goodchild, M. F., & Janelle, D. G. (2010). Toward critical spatial thinking in the social sciences and humanities. GeoJournal, 75(1), 3-13.
+
+Han, X.-P., Wang, X.-W., Yan, X.-Y., & Wang, B.-H. (2015). Cascading Walks Model for Human Mobility Patterns. PLOS ONE, 10(4), e0124800. https://doi.org/10.1371/journal.pone.0124800
+
+Harari, G. M., Lane, N. D., Wang, R., Crosier, B. S., Campbell, A. T., & Gosling, S. D. (2016). Using Smartphones to Collect Behavioral Data in Psychological Science: Opportunities, Practical Considerations, and Challenges. Perspectives on Psychological Science, 11(6), 838–854. https://doi.org/10.1177/1745691616650285
+
+Palmius, N., Tsanas, A., Saunders, K. E. A., Bilderbeck, A. C., Geddes, J. R., Goodwin, G. M., & Vos, M. D. (2017). Detecting Bipolar Depression From Geographic Location Data. IEEE Transactions on Biomedical Engineering, 64(8), 1761–1771. https://doi.org/10.1109/TBME.2016.2611862
+
+Patterson, T. A., Thomas, L., Wilcox, C., Ovaskainen, O., & Matthiopoulos, J. (2008). State–space models of individual animal movement. Trends in Ecology & Evolution, 23(2), 87–94. https://doi.org/10.1016/j.tree.2007.10.009
+
+Sadilek, A., & Krumm, J. (2016). Far Out: Predicting Long-Term Human Mobility. Microsoft Research. Retrieved from https://www.microsoft.com/en-us/research/publication/far-predicting-long-term-human-mobility/
+
+Rasmussen, T. K., Ingvardson, J. B., Halldórsdóttir, K., & Nielsen, O. A. (2015). Improved methods to deduct trip legs and mode from travel surveys using wearable GPS devices: A case study from the Greater Copenhagen area. Computers, Environment and Urban Systems, 54(Supplement C), 301–313. https://doi.org/10.1016/j.compenvurbsys.2015.04.001
+
+Wang, R., Harari, G., Hao, P., Zhou, X., & Campbell, A. T. (2015). SmartGPA: How Smartphones Can Assess and Predict Academic Performance of College Students. In Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing (pp. 295–306). New York, NY, USA: ACM. https://doi.org/10.1145/2750858.2804251
+
+Wolf, J., Oliveira, M., & Thompson, M. (2003). Impact of Underreporting on Mileage and Travel Time Estimates: Results from Global Positioning System-Enhanced Household Travel Survey. Transportation Research Record: Journal of the Transportation Research Board, 1854, 189–198. https://doi.org/10.3141/1854-21
+
+Yang, F., Yao, Z., Cheng, Y., Ran, B., & Yang, D. (2016). Multimode trip information detection using personal trajectory data. Journal of Intelligent Transportation Systems, 20(5), 449–460. https://doi.org/10.1080/15472450.2016.1151791
+
+Zheng, Y., Zhang, L., Xie, X., & Ma, W.-Y. (2009). Mining Interesting Locations and Travel Sequences from GPS Trajectories. In Proceedings of the 18th International Conference on World Wide Web (pp. 791–800). New York, NY, USA: ACM. https://doi.org/10.1145/1526709.1526816
