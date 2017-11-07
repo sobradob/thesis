@@ -16,6 +16,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(ggthemes)
+library(ggplot2)
 ```
 
 # Introduction
@@ -52,6 +53,12 @@ For highly correlated in time.
 Alternatives to state space models include long range-persistence models, such as cascading walks models  and the FarOut model which rely on self-similarity and autoregressive characteristics [@han_cascading_2015; @sadilek_far_2016]. The latter uses Fourier analysis and PCA to extract cyclical patterns in an individual's behaviour and reduce the dimensionality of the extracted features and yields interpretable predictions for an individuals location months in advance. 
 
 ## Methods
+
+*An asside as to my conversation with Peter on 07.11*
+
+We can get some trackers on people to measure movement constantly and be a "golden standard" to evaluate the models.
+
+For December, it would be nice to have the Lit Rev section, plus an exploration of the problem. 
 
 ### Data & Analyses
 
