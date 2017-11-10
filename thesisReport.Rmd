@@ -1,5 +1,5 @@
 ---
-title: 'Research Report: Longitudinal models of human mobility'
+title: 'Handling missing data in smartphone location logs'
 author: "Boaz Sobrado"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 bibliography:
@@ -22,8 +22,6 @@ library(knitr)
 
 # Abstract
 *There is a great interest in using objective location data to quantify the mobility characteristics of individuals. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human movement in order to impute missing data values. Moreover, we will compare the performance of the model compared to currently used methods, such as linear interpolation.*
-
-**Keywords: GPS, missing data, human mobility,big data**
 
 # Introduction
 
@@ -87,45 +85,40 @@ The advantage of state space models is that they are flexible, deal with measure
 
 Alternatives to state space models include long range-persistence models, such as cascading walks models  and the FarOut model which rely on self-similarity and autoregressive characteristics [@han_cascading_2015; @sadilek_far_2016]. The latter uses Fourier analysis and PCA to extract cyclical patterns in an individual's behaviour and reduce the dimensionality of the extracted features and yields interpretable predictions for an individuals location months in advance. 
 
+Missing: discussion of Barnett model.
+
 ## Methods
 
 *An asside as to my conversation with Peter on 07.11*
 
 We can get some trackers on people to measure movement constantly and be a "golden standard" to evaluate the models.
 
-For December, it would be nice to have the Lit Rev section, plus an exploration of the problem. 
-
 ### Data & Analyses
 
-The data used was collected between 2014 and 2017 on different Android devices. A total of X individuals contributed to the analysis, yielding a total of Y data points. Moreover we used diary information from **SOMEWHERE**.
+The data used was collected between 2014 and 2017 on different Android devices from X individuals across X continents. The table below provides more details:
 
-Analyses were performed using R and a multitude of other packages (@ggplot2 @dplyr @leaflet @sp @ggthemes @base @sp1 @sp2).
+```{r datadetailsTable}
+datadetails <- readRDS("datadetails.rds")
+kable(datadetails,digits = 2,col.names = c("Log duration",
+                                           "Observations",
+                                           "Missing days",
+                                           "Mean Accuracy",
+                                           "SD Accuracy"))
+```
 
-*Plots: data points over time*
+Analyses were performed using R and a multitude of other packages [@ggplot2;@dplyr;@leaflet; @ggthemes;@base;@sp1;@sp2].
 
-![Raw GPS measurements of a journey from de Uithof to Tuinwijk on February 17th 2017. The measurements are in red, the filtered path is in blue. The circles denote 67% confidence intervals of the given GPS measurement. Measurements and fitted points which follow each other in time are connected by lines. The inacurate measurements lead to estimates of irregular movements. The filtered movement estimate seems more accurate in terms of the path, but lags behind the unfiltered movement.](img/Map1.png)
+### Model evaluation
+Models were evaluated using a test set and a train set. During a period of 7 days participants wore a professional GPS device (TRX-100) which reported location every minute. In addition, they continued using their phones as normal. Missing data was imputed for the week for which more accurate data was available. 
 
-
-#### Filtering
-
-*Carlson et al 2015* describe a personal activity measurement system (PALMS), which can filter data points (among others). Their system is validated using cameras.
+Measures for which the accuracy was estimated include *barnett's path paper*.
 
 Like others (e.g. @palmius_detecting_2017) they detect invalid points using extreme speed.
 
-*Google* offers an out of the box activity inferral mechanism.
-
-### Discussion on missing data
-
-Our missing data patterns fit the broader pattern of missing data reported by others [@palmius_detecting_2017;@saeb_mobile_2015; @grunerbl_smartphone-based_2015;@harari_using_2016]. 
-
-Missing data can  Importantly, one cannot say that the data is missing at random as there are a myriad of reasons why missingness can be related to location, such as turning off the phone on the plane before a long flight.
-
-### Models
-
-#### Spatiotemporal imputation methods
-
-
 ## Results
+
+![Raw GPS measurements of a journey from de Uithof to Tuinwijk on February 17th 2017. The measurements are in red, the filtered path is in blue. The circles denote 67% confidence intervals of the given GPS measurement. Measurements and fitted points which follow each other in time are connected by lines. The inacurate measurements lead to estimates of irregular movements. The filtered movement estimate seems more accurate in terms of the path, but lags behind the unfiltered movement.](img/Map1.png)
+
 
 ## Discussion
 
