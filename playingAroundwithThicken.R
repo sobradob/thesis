@@ -2,25 +2,16 @@
 library(dplyr)
 library(padr)
 library(ggplot2)
+library(tibbletime)
 # read data
-loc<- readRDS("..\\all.rds")
+all<-readRDS("../data/peter/myLocationHistory.rds")
+attr(all$time, "tzone") <- "Europe/Paris"
 
-mDaily<- loc %>%
-  filter(who =="peter")%>%
-  select(time) %>%
-  mutate(time =  lubridate::force_tz(time, "Europe/Budapest")) %>%
-  top_n(207952)%>% 
-  thicken('day') %>%
-  group_by(time_day) %>%
-  summarise(count = n()) %>%
-  pad() %>%
-  fill_by_value(value = 0)
 
-mHour<- loc %>%
-  filter(who =="peter")%>%
+mHour<- all %>%
   select(time) %>%
-  mutate(time =  lubridate::force_tz(time, "Europe/Budapest")) %>%
-  top_n(207952)%>% 
+  as_tbl_time(index = time) %>%
+  time_filter(2000-01 ~ 2017-06) %>% 
   thicken('hour') %>%
   group_by(time_hour) %>%
   summarise(measurements = n()) %>%
@@ -48,10 +39,54 @@ missingDay<- ggplot(mHour, aes(x = time_hour_day, y=measurements, colour= hoursM
 
 ggsave(missingDay,filename = "img/missingdayPeter.png",device = "png",height = 6.5, units = "cm")
 
-pointsdaily<-loc %>% group_by(Day) %>% summarise(count = n())
-pointshourly<-loc %>%
-  group_by(Day, lubridate::hour(time)) %>%
-  summarise(count=n())
+accuracyData<- all %>%
+  as_tbl_time(time) %>%
+  select(time, accuracy)
 
-pointsdaily
-pointshourly
+hist(log(accuracyData$accuracy))
+## thing about this later, now do a dayplot of accuracy
+
+
+accuracyData<- all %>%
+  as_tbl_time(time) %>%
+  select(time, accuracy)%>%
+  time_filter(2016-02-05~2016-02-05)
+
+ggplot(accuracyData, aes(x = time, y=accuracy))+
+  geom_point()+theme_tufte()+
+  xlab("")+
+  ylab("Accuracy in Meters")+
+  ggtitle("Accuracy of measures in a day")
+
+
+  scale_colour_gradient2(low = muted("green"), mid = "grey50",
+                         high = muted("red"), midpoint = 12, space = "Lab",
+                         na.value = "grey50", guide = "colourbar")+
+  labs(x = NULL, colour = "Missing Hours")
+
+accData <- all %>% select(accuracy) %>% filter (accuracy < 20000)
+accuracy <- data.frame(accuracy = accData$accuracy,
+                       group = ifelse(accData$accuracy < 800,"High",
+                                      ifelse(accData$accuracy < 5000, "Middle",
+                                             "Low")))
+  
+accuracy$group <- factor(accuracy$group, levels = c("High", "Middle", "Low"))
+
+accuracyPlot<- ggplot(accuracy, aes(x = accuracy, fill = group)) + 
+    geom_histogram() + 
+    facet_grid(group ~ ., scales="free") + 
+    theme_tufte() +
+    theme(
+      legend.position = "none",
+      strip.placement = "outside",
+      strip.background = element_blank(),
+      axis.text.x = element_text(angle = 0, vjust = 0.5, hjust = 0.5)
+    ) +
+    labs(
+      x = "Accuracy in metres",
+      y = "Count",
+      title = "Location Log Accuracy"
+    )+scale_fill_manual(values=c(muted("green"),"grey50",muted("red")))
+
+
+ggsave(accuracyPlot,filename = "img/accuracyPeter.png",device = "png",height = 6.5, units = "cm")

@@ -14,40 +14,58 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 library(ggthemes)
 library(ggplot2)
 library(knitr)
 ```
 
 # Abstract
-*There is a great interest in using objective location data to quantify the mobility characteristics of individuals. However, *
+*There is a great interest in using objective location data to quantify the mobility characteristics of individuals. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human movement in order to impute missing data values. Moreover, we will compare the performance of the model compared to currently used methods, such as linear interpolation.*
+
+**Keywords: GPS, missing data, human mobility,big data**
 
 # Introduction
 
-How active people are and how they interact with their environment affects a wide range of measures including health , income and social capital [@goodchild_toward_2010]. A better understanding of both within-person and between-person variability in geospatial patterns could be conducive to better social, health and urban-planning policies. Yet a large part of studies on human mobility are largely based on pen-and-paper travel diaries. These surveys have known methodological flaws, such as the short period of data collection (due to costs and burden to respondents), the underreporting of short trips [@wolf_impact_2003] and the underestimation of the duration of commutes [@delclos-alio_keeping_2017].
+How active people are and how they interact with their environment affects a wide range of measures including health , income and social capital [@goodchild_toward_2010]. A better understanding of both within-person and between-person variability in geospatial patterns could be conducive to better social, health and urban-planning policies. Yet a large part of studies on human mobility are largely based on pen-and-paper travel diaries. These surveys have known methodological flaws, such as the short period of data collection (due to costs and burden to respondents), the underreporting of short trips [@wolf_impact_2003] and the underestimation of the duration of commutes [@delclos-alio_keeping_2017]. 
 
-Objective data on human temporospatial behaviour has become available throgh the Global Positioning System (GPS) which uses the distance between a device and a number of satellites to determine location. Within behavioural science, this type of data has been used to investigate topics such as the effects of the food environment on eating patterns [@zenk_how_2009], the movement correlates of personality and academic performance [@harari_using_2016; @wang_smartgpa:_2015] and detecting bipolar disorder [@palmius_detecting_2017]. In most of these studies participants are given a specialised GPS devices or a smartphone with a custom made app. However, @barnett_inferring_2016 point out that these studies are not scalable due to cost and burden to participants, moreover may be biased because of the introduction of a new device to the participant's life and usually span a short amount of time. A solution would be to take advantage of the location logs that smartphones already collect, such as Google Location History which stores Android phone users' locations [@location_history_timeline_nodate]. Yet, because GPS sensors consume a significant amounts of battery, these logs can be sparse and inaccurate. Hence, two important challenges are dealing with measurement noise and missing data.
+Objective data on human mobility has become available throgh the Global Positioning System (GPS) which uses the distance between a device and a number of satellites to determine location. Within behavioural science, this type of data has been used to investigate topics such as the effects of the food environment on eating patterns [@zenk_how_2009], the movement correlates of personality and academic performance [@harari_using_2016; @wang_smartgpa:_2015] and detecting bipolar disorder [@palmius_detecting_2017].
 
-Studies of professional grade GPS trackers suggest that less than 80% of measurements fall within 10 meters of the true location. Moreover, GPS measures are reported to be most inaccurate in high density urban locations and indoors [@schipperijn_dynamic_2014;@duncan_portable_2013]. Unfortunately for social scientists , this happens to be where most people in the developed world tend to spend most of their time. In addition, location data collected by more ubiquitous (but less specialised) smartphones are an amalgamation of sensor data. For instance, Android phones collect location information from WiFi access points, cellphone triangluation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005;@chen_practical_2006]. This adds another layer of complexity as each of these measures has its own characteristics in terms of measurement accuracy and bias.
+In most of these studies participants are given a specialised GPS devices or a smartphone with a custom made app. However, @barnett_inferring_2016 point out that these studies are not scalable due to cost and burden to participants, moreover may be biased because of the introduction of a new device to the participant's life and usually span a short amount of time. A solution is to take advantage of the already exisiting smartphone location logs, such as Google Location History, which store location information of millions of users spanning several years[@location_history_timeline_nodate]. These logs can be accessed and shared by users. Yet, because GPS sensors consume a significant amounts of battery, these logs can be sparse and inaccurate. Hence, two important challenges are dealing with measurement noise and missing data.
 
-As for missing data it is a pervasive issue as it can arise due to multiple factors, both technical and behavioural. Technical reasons include signal loss, battery failure and device failure. Behavioural reasons include leaving the phone at home, switching the phone off, switching location tracking off, etc. As a result, applied researchers are often left with wide temporal gaps with no measurements. For instance, different groups studying the effect of bipolar disorder on human movement have reported missing data rates between 30% to 50% [@saeb_mobile_2015;@grunerbl_smartphone-based_2015;@palmius_detecting_2017]. Similar trends are consistently reported in other fields [e.g. @harari_using_2016;@jankowska_framework_2015].
+There is currently no golden standard in how to deal with missing data in this context [@barnett_inferring_2016]. @jankowska_framework_2015 have pointed out that there is often little transparency regarding decisions of how to deal with it. Methods frequently used by researchers to reduce noise, such as throwing out inaccurate measurements [e.g. @palmius_detecting_2017] can exacerbate the severity of the missing data problem. On the other hand, noisy data can lead to inaccurate conclusions if it is not accounted for. In this paper we will compare methods used to deal with measurement error and missing data in location information. Specifically, we are interested in establishing accurate mobility patterns from smartphone GPS logs.
 
-There is currently no golden standard in how to deal with missing temporospatial track data [@barnett_inferring_2016]. @jankowska_framework_2015 have pointed out that there is often little transparency regarding decisions of how to deal with it. Methods frequently used by researchers to reduce noise, such as throwing out inaccurate measurements [e.g. @palmius_detecting_2017] can increase the severity of the missing data problem. On the other hand, noisy data can lead to inaccurate conclusions if it is not accounted for.
+# Problem description & literature review
 
-In this paper we will compare methods used to deal with measurement error and missing data in location information. Specifically, we are interested in establishing accurate mobility patterns from smartphone GPS logs.
+Given that there is next to no literature on missing data in smartphone location logs it is worth illustrating the typical characteristics of this data using an example data set. Moreover, although we could find no published papers on dealing with missing data in this narrow domain, there are however methods which deal with similar problems. In this section we will describe the problems with the data and models which could be applied to it.
 
-# Problem description and literature review
+## Missing data and noise in location logs
 
-## The structure of smartphone location logs
+This example data set spans 3 years from January 2013 to January 2017. It contains 814 941 measurements, with approximately 742 measurements per day (*SD*=868.15). Moreover, it also contains estimates of velocity, altitude, heading and activity (e.g. in a vehicle, still). For the purposes of this paper we will focus only on lattitude, longitude and time.
 
-Android logged data 
+### Accuracy
 
-```{r, measurementsPerDay,echo = FALSE,fig.cap="Missing data over time for the author. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a day. The fill of the points shows the amount of hours of captured data each day.",out.width = '100%'}
-include_graphics("img/missingdayPeter.png")# from the playingaroundwiththicken.r file
+Even in professional grade GPS trackers less than 80% of measurements fall within 10 meters of the true location. Moreover, GPS measures are reported to be most inaccurate in high density urban locations and indoors [@schipperijn_dynamic_2014;@duncan_portable_2013]. Unfortunately for social scientists, this happens to be where most people in the developed world tend to spend most of their time.
+
+
+```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement. The x-axis denotes the accuracy in meters such that the user's actual location is expected to be within that radius with 67 percent confidence. Measures were classified into high accuracy (under 800m), medium accuracy (under 5000m) and low accuracy (over 5000m). Measures with accuracy of over 20000m were omitted from the graph. The maximum accuracy measure was over 40000m. Low accuracy measures are often near in time to more high accuracy measures.",out.width = '100%'}
+
+include_graphics("img/accuracyPeter.png")
+
 ```
 
-Linear Interpolation vs actual movement vs kalman filtered.  
+
+Given that Android phones collect location information from WiFi access points, cellphone triangluation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005;@chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures fall with a 67% confidence radius of 20 meters. 
+
+### Missingness
+
+Missing data is a pervasive issue as it can arise due to multiple factors, both technical and behavioural. Technical reasons include signal loss, battery failure and device failure. Behavioural reasons include leaving the phone at home, switching the phone off, switching location measurements off, and so on. As a result, applied researchers are often left with wide temporal gaps with no measurements. For instance, different groups studying the effect of bipolar disorder on human movement have reported missing data rates between 30% to 50% [@saeb_mobile_2015;@grunerbl_smartphone-based_2015;@palmius_detecting_2017]. Similar trends are consistently reported in other fields [e.g. @harari_using_2016;@jankowska_framework_2015].
+
+
+```{r, measurementsPerDay,echo = FALSE,fig.cap="Missing data over time for the author. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a day. The fill of the points shows the amount of hours of captured data each day.",out.width = '100%'}
+
+include_graphics("img/missingdayPeter.png")# from the playingaroundwiththicken.r file
+```
 
 ## State of the art in temporospatial models
 
@@ -102,8 +120,6 @@ Our missing data patterns fit the broader pattern of missing data reported by ot
 
 Missing data can  Importantly, one cannot say that the data is missing at random as there are a myriad of reasons why missingness can be related to location, such as turning off the phone on the plane before a long flight.
 
-```{r missingDataPlot,echo = FALSE,fig.cap="Missing data over time for the author. The x-axis denotes time, the y-axis shows how many measurements are made on each day. The fill of the points shows the amount of hours of captured data each day.",fig.height=5}
-
 ### Models
 
 #### Spatiotemporal imputation methods
@@ -112,5 +128,6 @@ Missing data can  Importantly, one cannot say that the data is missing at random
 ## Results
 
 ## Discussion
+
 
 ## References
