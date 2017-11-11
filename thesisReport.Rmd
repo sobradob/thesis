@@ -29,13 +29,13 @@ How active people are and how they interact with their environment affects a wid
 
 Objective data on human mobility has become available throgh the Global Positioning System (GPS) which uses the distance between a device and a number of satellites to determine location. Within behavioural science, this type of data has been used to investigate topics such as the effects of the food environment on eating patterns [@zenk_how_2009], the movement correlates of personality and academic performance [@harari_using_2016; @wang_smartgpa:_2015] and detecting bipolar disorder [@palmius_detecting_2017].
 
-In most of these studies participants are given a specialised GPS devices or a smartphone with a custom made app. However, @barnett_inferring_2016 point out that these studies are not scalable due to cost and burden to participants, moreover may be biased because of the introduction of a new device to the participant's life and usually span a short amount of time. A solution is to take advantage of the already exisiting smartphone location logs, such as Google Location History, which store location information of millions of users spanning several years[@location_history_timeline_nodate]. These logs can be accessed and shared by users. Yet, because GPS sensors consume a significant amounts of battery, these logs can be sparse and inaccurate. Hence, two important challenges are dealing with measurement noise and missing data.
+In most of these studies participants are given a specialised GPS devices, resulting in accurate mobility GPS data (*specialised logs*). However, @barnett_inferring_2016 point out that these studies are not scalable due to cost and burden to participants, moreover may be biased because of the introduction of a new device to the participant's life. Because of this, specialised logs usually span a short amount of time. @barnett_inferring_2016 advocate installing custom-made tracking app on user's phones (*custom logs*). Another solution is to take advantage of exisiting smartphone location logs, such as Google Location History, which store location information of millions of users spanning several years[@location_history_timeline_nodate] (*secondary logs*). These logs can be accessed and shared by users. Yet, because they were created for non-academic purposes under engineering constraints, these logs can be sparse and inaccurate. Hence, two important challenges are dealing with measurement noise and missing data.
 
-There is currently no golden standard in how to deal with missing data in this context [@barnett_inferring_2016]. @jankowska_framework_2015 have pointed out that there is often little transparency regarding decisions of how to deal with it. Methods frequently used by researchers to reduce noise, such as throwing out inaccurate measurements [e.g. @palmius_detecting_2017] can exacerbate the severity of the missing data problem. On the other hand, noisy data can lead to inaccurate conclusions if it is not accounted for. In this paper we will compare methods used to deal with measurement error and missing data in location information. Specifically, we are interested in establishing accurate mobility patterns from smartphone GPS logs.
+There is currently no golden standard in how to deal with missing data in custom or secondary logs [@barnett_inferring_2016]. @jankowska_framework_2015 have pointed out that there is often little transparency regarding decisions of how to deal with missing data. Methods frequently used by researchers to reduce noise, such as throwing out inaccurate measurements [e.g. @palmius_detecting_2017] can exacerbate the severity of the missing data problem. On the other hand, noisy data can lead to inaccurate conclusions if it is not accounted for. In this paper we will compare methods used to deal with measurement error and missing data in location information. Specifically, we are interested in establishing accurate mobility patterns from smartphone GPS logs.
 
 # Problem description & literature review
 
-Given that there is next to no literature on missing data in smartphone location logs it is worth illustrating the typical characteristics of this data using an example data set. Moreover, although we could find no published papers on dealing with missing data in this narrow domain, there are however methods which deal with similar problems. In this section we will describe the problems with the data and models which could be applied to it.
+Given that there is next to no literature on missing data in custom or secondary logs it is worth illustrating the typical characteristics of this data using an example data set. Moreover, although we could find no published papers on dealing with missing data in secondary logs, there are however methods which deal with similar problems. In this section we will describe the problems with the data and models which could be applied to it.
 
 ## Missing data and noise in location logs
 
@@ -43,8 +43,9 @@ This example data set spans 3 years from January 2013 to January 2017. It contai
 
 ### Accuracy
 
-Even in professional grade GPS trackers less than 80% of measurements fall within 10 meters of the true location. Moreover, GPS measures are reported to be most inaccurate in high density urban locations and indoors [@schipperijn_dynamic_2014;@duncan_portable_2013]. Unfortunately for social scientists, this happens to be where most people in the developed world tend to spend most of their time.
+In professional grade GPS trackers less than 80% of measurements fall within 10 meters of the true location. GPS measures are reported to be most inaccurate in high density urban locations and indoors [@schipperijn_dynamic_2014;@duncan_portable_2013]. Unfortunately for social scientists, this happens to be where most people in the developed world tend to spend most of their time.
 
+Given that Android phones collect location information from WiFi access points, cellphone triangluation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005;@chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures fall with a 67% confidence radius of 20 meters. @palmius_detecting_2017 note that in their custom logs that inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. Similar patterns have been observed in secondary logs. 
 
 ```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement. The x-axis denotes the accuracy in meters such that the user's actual location is expected to be within that radius with 67 percent confidence. Measures were classified into high accuracy (under 800m), medium accuracy (under 5000m) and low accuracy (over 5000m). Measures with accuracy of over 20000m were omitted from the graph. The maximum accuracy measure was over 40000m. Low accuracy measures are often near in time to more high accuracy measures.",out.width = '100%'}
 
@@ -52,8 +53,6 @@ include_graphics("img/accuracyPeter.png")
 
 ```
 
-
-Given that Android phones collect location information from WiFi access points, cellphone triangluation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005;@chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures fall with a 67% confidence radius of 20 meters. 
 
 ### Missingness
 
@@ -90,7 +89,7 @@ The advantage of state space models is that they are flexible, deal with measure
 
 Alternatives to state space models include long range-persistence models, such as cascading walks models  and the FarOut model which rely on self-similarity and autoregressive characteristics [@han_cascading_2015; @sadilek_far_2016]. The latter uses Fourier analysis and PCA to extract cyclical patterns in an individual's behaviour and reduce the dimensionality of the extracted features and yields interpretable predictions for an individuals location months in advance. 
 
-### Linear interpolation
+### Filtering & Mean imputation
 
 @palmius_detecting_2017 deal with measuremement inaccuracy of $D$ by removing from the data set all unique low-accuracy data points that had  $\frac{d}{dt}D > 100 \frac{km}{h}$. Subsequently the researchers down sample the data to a sample rate of 12 per hour using a median filter. Morever:
 
@@ -99,6 +98,14 @@ Alternatives to state space models include long range-persistence models, such a
 Missing data was imputed using the mean of measurements close in time if the participant was recorded within 500m of either end of a missing section and the missing section had a length of $\leq 2h$ or $\leq 12h$ after 9pm. 
 
 ### Barnett's model
+
+@barnett_inferring_2016 deal with custom logs where location is measured for 2 minutes and subsequently not measured for 10 minutes. They handle missing data by:
+
+> simulat[ing] flights and pauses over the period of missingness where the direction,
+duration, and spatial length of each flight, the fraction of flights versus the fraction of
+pauses, and the duration of pauses are sampled from observed data
+
+This method can be extended to imputing the data based on temporally, spatially or periodically close flights and pauses. In other words, for a given missing period, the individual's mobility can be estimated based on  measured movements in that area, at that point in time or movements in the last 24 hours. 
 
 ## Methods
 
