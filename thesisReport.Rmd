@@ -21,7 +21,7 @@ library(knitr)
 ```
 
 # Abstract
-*There is a great interest in using objective location data to quantify the mobility characteristics of individuals. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human movement in order to impute missing data values. Moreover, we will compare the performance of the model compared to currently used methods, such as linear interpolation.*
+*There is a great interest in using objective location data to infer the mobility measures of individuals. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human mobility in order to impute missing data values. Moreover, we will compare the performance of the model compared to currently used methods, such as linear interpolation.*
 
 # Introduction
 
@@ -65,27 +65,40 @@ Missing data is a pervasive issue as it can arise due to multiple factors, both 
 include_graphics("img/missingdayPeter.png")# from the playingaroundwiththicken.r file
 ```
 
-## State of the art in temporospatial models
+## State of the art in spatiotemporal models
 
-Research with respect to the analysis of GPS data is wideranging, highly interdisciplinary and often serves different purposes. Given that @barnett_inferring_2016 is to our knowledge the only paper explicitly focusing on dealing with missingness for inferring missingness using GPS data the following section briefly illustrates the some methods used to solve measurement inaccuracy and missing data problems in the field, as well as their applicability to our question.
+Research with respect to the analysis of GPS data is wideranging, highly interdisciplinary and serves vastly different purposes. The following section briefly illustrates some methods used to deal with measurement inaccuracy and missing data problems in spatiotemporal data, as well as their applicability to our question. Moreover, we discuss in detail two approaches which deal explicitly with missing data in smartphone measured human location.
+
+Let $D$ element of $R^4$ be the recorded data, $x$ element of $R^3$ our actual place in time space. 
 
 ### Spatiotemporal Imputation Methods
 
 Given fixed measurement stations there are sevaral imputation methods for spatiotemporal measurements. For instance, @feng_cutoff:_2014 illustrate their CUTOFF method, which relies on estimating missing values using the nearest observed neighbours in time, using rainfall data from dozens of gauging stations across Australia. Similarly, @zhang_application_2017 use a variety of machine learning methods to present their model based on underground water data in China.
 
-While @feng_cutoff:_2014 claim their model could be used to establish mobility patterns, ostentibly by dividing the sample space into rasters which would be measurement stations indicating a probability of the individual being there, this seems to be computationally unfeasible to do. To our knowledge such models have not been implemented.  
+While @feng_cutoff:_2014 claim their model could be used to establish mobility patterns, ostentibly by dividing the sample space into rasters analogous to measurement stations indicating a probability of the individual being there, this seems to be computationally unfeasible. To our knowledge such models have not been implemented.  
 
 ### State Space Models
 
-There is a vast literature of using state space models (SSMs) to improve measurements accuracy and deal with missing data. Behavioural ecologists for instance, have used SSMs to explain how animals interact with their environment [@patterson_statespace_2008]. These models can be quite complex, for example @preisler_modeling_2004 uses Markovian movement processes to characterise the effect of roads, food patches and streams on cyclical elk movements. The most well studied SSM is the Kalman filter, which is the optimal algorithm for inferring linear Gaussian systems. The extended Kalman filter is the de facto standard for GPS measurements [@chen_state_2013]. 
+There is a vast literature of using state space models (SSMs) to improve measurements accuracy and deal with missing data. Behavioural ecologists for instance, have used SSMs extensively to explain how animals interact with their environment [@patterson_statespace_2008]. These models can be quite complex, for example @preisler_modeling_2004 uses Markovian movement processes to characterise the effect of roads, food patches and streams on cyclical elk movements. The most well studied SSM is the Kalman filter, which is the optimal algorithm for inferring linear Gaussian systems. The extended Kalman filter is the de facto standard for GPS navigation [@chen_state_2013].
 
-The advantage of state space models is that they are flexible, deal with measurement inaccuracy, include information from different sources and can be used in real time. For our pourposes the main limitation is that these models are based on the Markov property. Thus, the estimated location at timepoint $k$ is often based only upon measurements at $k$ and the previous timepoint $k-1$. This assumption ignores the periodic nature of human movement, whereby people generally spend the nights at home and the day at work. Hierarchical structuring and conditioning on a larger context have been suggested as ways to improve their performance, but these are often computationally intractable or infeasible [@sadilek_far_2016].
+**Should I show the Kalman filter here?**
+In the Kalman filter the recorded data is modelled by a measurement equation.
+
+The advantage of state space models is that they are flexible, deal with measurement inaccuracy, include information from different sources and can be used in real time. For our pourposes the main limitation is that these models are based on the Markov property. Thus, the estimated location at timepoint $k$ is often based only upon measurements at $k$ and the previous timepoint $k-1$. This may be suitable for ships at sea, but it ignores the highly periodic nature of human movement. Hierarchical structuring and conditioning on a larger context have been suggested as ways to improve their performance, but these are often computationally intractable or infeasible [@sadilek_far_2016].
 
 ### Alternative models
 
 Alternatives to state space models include long range-persistence models, such as cascading walks models  and the FarOut model which rely on self-similarity and autoregressive characteristics [@han_cascading_2015; @sadilek_far_2016]. The latter uses Fourier analysis and PCA to extract cyclical patterns in an individual's behaviour and reduce the dimensionality of the extracted features and yields interpretable predictions for an individuals location months in advance. 
 
-Missing: discussion of Barnett model.
+### Linear interpolation
+
+@palmius_detecting_2017 deal with measuremement inaccuracy of $D$ by removing from the data set all unique low-accuracy data points that had  $\frac{d}{dt}D > 100 \frac{km}{h}$. Subsequently the researchers down sample the data to a sample rate of 12 per hour using a median filter. Morever:
+
+>If the standard deviation of [$D$] in both latitude and longitude within a 1 h epoch was less than 0.01 km, then all samples within the hour were set to the mean value of the recorded data, otherwise a 5 min median filter window was applied to the recorded latitude and longitude in the epoch.
+
+Missing data was imputed using the mean of measurements close in time if the participant was recorded within 500m of either end of a missing section and the missing section had a length of $\leq 2h$ or $\leq 12h$ after 9pm. 
+
+### Barnett's model
 
 ## Methods
 
@@ -113,7 +126,6 @@ Models were evaluated using a test set and a train set. During a period of 7 day
 
 Measures for which the accuracy was estimated include *barnett's path paper*.
 
-Like others (e.g. @palmius_detecting_2017) they detect invalid points using extreme speed.
 
 ## Results
 
