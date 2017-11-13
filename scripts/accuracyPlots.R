@@ -87,13 +87,13 @@ box<- c(left = min(boazday0218$lon)-0.01,
 library(ggmap)
 map<- get_stamenmap(bbox=box,zoom = 15, maptype = "toner-lite")
 q<- ggmap(map)+
-  geom_point(aes(lon,lat,frame = time2,colour = accuracy),data = boazday0218)
+  geom_point(aes(lon,lat,frame = time2,colour = accuracy),data = boazday0218)+xlab("")+ylab("")
 
 gganimate(q,"output.gif",interval = .2,ani.width=1000, ani.height=800)
 library(magick)
 
-library(animation)
-gganimate(q, ani.options(convert = 'path/to/convert.exe'))
+gganimate(q,"output.mp4",interval = .1,ani.width=500, ani.height=400, ani.res = 300)
+
 
 install.packages("installr")
 library(installr); install.ImageMagick(URL = "http://www.imagemagick.org/script/download.php")

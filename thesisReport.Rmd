@@ -7,6 +7,7 @@ bibliography:
   - rReferences.bib
 output:
   rmarkdown::pdf_document:
+    citation_package: natbib
     fig_caption: yes        
     includes:  
       in_header: tp2.tex
@@ -21,31 +22,31 @@ library(knitr)
 ```
 
 # Abstract
-*There is a great interest in using objective location data to infer the mobility measures of individuals. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human mobility in order to impute missing data values. Moreover, we will compare the performance of the model compared to currently used methods, such as linear interpolation.*
+*Using objective location data to infer the mobility measures of individuals is highly desirable, but methodologically difficult. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human mobility in order to impute missing data values. Moreover, we will compare the performance of the model compared to currently used methods, such as linear interpolation.*
 
 # Introduction
 
 How active people are and how they interact with their environment affects a wide range of measures including health , income and social capital [@goodchild_toward_2010]. A better understanding of both within-person and between-person variability in geospatial patterns could be conducive to better social, health and urban-planning policies. Yet a large part of studies on human mobility are largely based on pen-and-paper travel diaries. These surveys have known methodological flaws, such as the short period of data collection (due to costs and burden to respondents), the underreporting of short trips [@wolf_impact_2003] and the underestimation of the duration of commutes [@delclos-alio_keeping_2017]. 
 
-Objective data on human mobility has become available throgh the Global Positioning System (GPS) which uses the distance between a device and a number of satellites to determine location. Within behavioural science, this type of data has been used to investigate topics such as the effects of the food environment on eating patterns [@zenk_how_2009], the movement correlates of personality and academic performance [@harari_using_2016; @wang_smartgpa:_2015] and detecting bipolar disorder [@palmius_detecting_2017].
+Objective data on human mobility has become available through the Global Positioning System (GPS) which uses the distance between a device and a number of satellites to determine location. Within behavioural science, this type of data has been used to investigate topics such as the effects of the food environment on eating patterns [@zenk_how_2009], the movement correlates of personality and academic performance [@harari_using_2016; @wang_smartgpa:_2015] and detecting bipolar disorder [@palmius_detecting_2017].
 
-In most of these studies participants are given a specialised GPS devices, resulting in accurate mobility GPS data (*specialised logs*). However, @barnett_inferring_2016 point out that these studies are not scalable due to cost and burden to participants, moreover may be biased because of the introduction of a new device to the participant's life. Because of this, specialised logs usually span a short amount of time. @barnett_inferring_2016 advocate installing custom-made tracking app on user's phones (*custom logs*). Another solution is to take advantage of exisiting smartphone location logs, such as Google Location History, which store location information of millions of users spanning several years[@location_history_timeline_nodate] (*secondary logs*). These logs can be accessed and shared by users. Yet, because they were created for non-academic purposes under engineering constraints, these logs can be sparse and inaccurate. Hence, two important challenges are dealing with measurement noise and missing data.
+In most of these studies participants are given a specialised devices, resulting in accurate mobility GPS data (*specialised logs*). However, @barnett_inferring_2016 point out that these studies are not scalable due to cost and burden to participants, moreover may be biased because of the introduction of a new device to the participant's life. Because of this, specialised logs usually span a short amount of time. @barnett_inferring_2016 advocate installing custom-made tracking app on user's phones (*custom logs*). Another solution is to take advantage of existing smartphone location logs, such as Google Location History, which store location information of millions of users spanning several years [@location_history_timeline_nodate] (*secondary logs*). These logs can be accessed and shared by users. Yet, because they were created for non-academic purposes under engineering constraints, the sensors do not monitor continuously and the resulting logs can be sparse and inaccurate. Hence, two important challenges are dealing with measurement noise and missing data.
 
-There is currently no golden standard in how to deal with missing data in custom or secondary logs [@barnett_inferring_2016]. @jankowska_framework_2015 have pointed out that there is often little transparency regarding decisions of how to deal with missing data. Methods frequently used by researchers to reduce noise, such as throwing out inaccurate measurements [e.g. @palmius_detecting_2017] can exacerbate the severity of the missing data problem. On the other hand, noisy data can lead to inaccurate conclusions if it is not accounted for. In this paper we will compare methods used to deal with measurement error and missing data in location information. Specifically, we are interested in establishing accurate mobility patterns from smartphone GPS logs.
+There is currently no golden standard in how to deal with missing data in custom or secondary logs [@barnett_inferring_2016]. @jankowska_framework_2015 have pointed out that there is often little transparency regarding decisions of how to deal with missing data. Methods frequently used by researchers to reduce noise, such as throwing out inaccurate measurements [e.g. @palmius_detecting_2017] can exacerbate the severity of the missing data problem. Traditional missing data methods, such as multiple imputation, cannot be used easily due to the geospatial nature of the data.  On the other hand, noisy data can lead to inaccurate conclusions if it is not accounted for, such as underestimating the movement of individuals. In this paper we will compare methods used to deal with measurement error and missing data in location information. Specifically, we are interested in establishing accurate mobility patterns from smartphone GPS logs.
 
 # Problem description & literature review
 
-Given that there is next to no literature on missing data in custom or secondary logs it is worth illustrating the typical characteristics of this data using an example data set. Moreover, although we could find no published papers on dealing with missing data in secondary logs, there are however methods which deal with similar problems. In this section we will describe the problems with the data and models which could be applied to it.
+Given that there is next to no literature on missing data in custom or secondary logs it is worth illustrating the typical characteristics of this data using an example data set. Moreover, although we could find no published papers on dealing with missing data in secondary logs, there are methods which deal with similar problems. In this section we will describe the problems with the data and why they arise as well as the models which could be applied to it.
 
 ## Missing data and noise in location logs
 
-This example data set spans 3 years from January 2013 to January 2017. It contains 814 941 measurements, with approximately 742 measurements per day (*SD*=868.15). Moreover, it also contains estimates of velocity, altitude, heading and activity (e.g. in a vehicle, still). For the purposes of this paper we will focus only on lattitude, longitude and time.
+This example data set comes from Google Location History and spans 3 years from January 2013 to January 2017 with multiple different Android devices. It contains 814 941 measurements, with approximately 742 measurements per day (*SD*=868.15). The data set contains a wide range of variables. For the purposes of this paper we will focus only on latitude, longitude, accuracy and time. Accuracy is defined as the size in meters of the radius of a circle such that 67% of the measurements fall within it.
 
-### Accuracy
+### Accuracy in location logs 
 
 In professional grade GPS trackers less than 80% of measurements fall within 10 meters of the true location. GPS measures are reported to be most inaccurate in high density urban locations and indoors [@schipperijn_dynamic_2014;@duncan_portable_2013]. Unfortunately for social scientists, this happens to be where most people in the developed world tend to spend most of their time.
 
-Given that Android phones collect location information from WiFi access points, cellphone triangluation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005;@chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures fall with a 67% confidence radius of 20 meters. @palmius_detecting_2017 note that in their custom logs that inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. Similar patterns have been observed in secondary logs. 
+Given that Android phones collect location information from WiFi access points, cellphone triangulation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005; @chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures fall with a 67% confidence radius of 20 meters. @palmius_detecting_2017 note that in their custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. I observe similar patterns in secondary logs. 
 
 ```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement. The x-axis denotes the accuracy in meters such that the user's actual location is expected to be within that radius with 67 percent confidence. Measures were classified into high accuracy (under 800m), medium accuracy (under 5000m) and low accuracy (over 5000m). Measures with accuracy of over 20000m were omitted from the graph. The maximum accuracy measure was over 40000m. Low accuracy measures are often near in time to more high accuracy measures.",out.width = '100%'}
 
@@ -62,28 +63,57 @@ Missing data is a pervasive issue as it can arise due to multiple factors, both 
 ```{r, measurementsPerDay,echo = FALSE,fig.cap="Missing data over time for the author. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a day. The fill of the points shows the amount of hours of captured data each day.",out.width = '100%'}
 
 include_graphics("img/missingdayPeter.png")# from the playingaroundwiththicken.r file
+# to do: make into 5 minute slots
+
 ```
 
 ## State of the art in spatiotemporal models
 
 Research with respect to the analysis of GPS data is wideranging, highly interdisciplinary and serves vastly different purposes. The following section briefly illustrates some methods used to deal with measurement inaccuracy and missing data problems in spatiotemporal data, as well as their applicability to our question. Moreover, we discuss in detail two approaches which deal explicitly with missing data in smartphone measured human location.
 
-Let $D$ element of $R^4$ be the recorded data, $x$ element of $R^3$ our actual place in time space. 
+Let $d \in \mathbb{R}^3$ be the recorded data containing lattitude, longitude, accuracy and $l \in \mathbb{R}^3$ be actual location in space. $d_k$ and $l_k$ denote the measured location and the true location at time $k$. 
 
 ### Spatiotemporal Imputation Methods
 
-Given fixed measurement stations there are sevaral imputation methods for spatiotemporal measurements. For instance, @feng_cutoff:_2014 illustrate their CUTOFF method, which relies on estimating missing values using the nearest observed neighbours in time, using rainfall data from dozens of gauging stations across Australia. Similarly, @zhang_application_2017 use a variety of machine learning methods to present their model based on underground water data in China.
+Given fixed measurement stations there are several imputation methods for spatiotemporal measurements. For instance, @feng_cutoff:_2014 illustrate their CUTOFF method, which relies on estimating missing values using the nearest observed neighbours in time, using rainfall data from dozens of gauging stations across Australia. Similarly, @zhang_application_2017 use a variety of machine learning methods to present their model based on underground water data in China.
 
-While @feng_cutoff:_2014 claim their model could be used to establish mobility patterns, ostentibly by dividing the sample space into rasters analogous to measurement stations indicating a probability of the individual being there, this seems to be computationally unfeasible. To our knowledge such models have not been implemented.  
+While @feng_cutoff:_2014 claim their model could be used to establish mobility patterns, ostensibly by dividing the sample space into rasters analogous to measurement stations indicating a probability of the individual being there, this seems to be computationally unfeasible. To our knowledge such models have not been implemented.  
 
 ### State Space Models
 
 There is a vast literature of using state space models (SSMs) to improve measurements accuracy and deal with missing data. Behavioural ecologists for instance, have used SSMs extensively to explain how animals interact with their environment [@patterson_statespace_2008]. These models can be quite complex, for example @preisler_modeling_2004 uses Markovian movement processes to characterise the effect of roads, food patches and streams on cyclical elk movements. The most well studied SSM is the Kalman filter, which is the optimal algorithm for inferring linear Gaussian systems. The extended Kalman filter is the de facto standard for GPS navigation [@chen_state_2013].
 
-**Should I show the Kalman filter here?**
-In the Kalman filter the recorded data is modelled by a measurement equation.
+The state equation of the Kalman filter models the current location:
 
-The advantage of state space models is that they are flexible, deal with measurement inaccuracy, include information from different sources and can be used in real time. For our pourposes the main limitation is that these models are based on the Markov property. Thus, the estimated location at timepoint $k$ is often based only upon measurements at $k$ and the previous timepoint $k-1$. This may be suitable for ships at sea, but it ignores the highly periodic nature of human movement. Hierarchical structuring and conditioning on a larger context have been suggested as ways to improve their performance, but these are often computationally intractable or infeasible [@sadilek_far_2016].
+$$
+l_k = Al_{k-1} + Bu_{k-1}+w_{k-1}
+$$
+Here $w_k$ is known as the process noise and is conceptually equivalent to the error term in a linear regression. $A$ is a square matrix of order $n$ which relates our current state to the previous state. $B$ is an $n \times x$ matrix which relates the optional control input $u \in \mathbb{R}^x$ to the state $l$.
+
+The measurement equation models the measurements at any given time:
+
+$$
+d_k = H l_k +v_k
+$$
+
+$v_k$ is known as the measurement noise and represents the errors in measurement and $H$ is an $m \times n$  matrix relating the state to the measurement.
+
+The noise in both equations assumed to be:
+
+$$p(w) \sim N(0,Q)$$
+
+$$p(v) \sim N(0,R)$$
+Where $Q$ is the process noise covariance matrix and $R$ is the measurement noise covariance.
+
+Then, let $\widehat{l}^{-}_k \in \mathbb{R}^n$ be the a priori state estimate given our knowledge of the process and $\widehat{l}_k \in \mathbb{R}^n$ be the a posteriori state estimate at step $k$ given measurement $d_k$. These two state estimates have error covariances denoted $P^{-}_k$ and $P_k$ respectively. Algebraically the Kalman filter can then be written as:
+
+$$
+\widehat{x}_k = \widehat{x}^{-}_k + K (z_k - H \widehat{x}^{-}_k)
+$$
+
+Where $K$ (the weight or Kalman gain) is a square matrix order $n \times m$ matrix which minimizes the posteriori error covariance.
+
+The advantage of state space models is that they are flexible, deal with measurement inaccuracy, include information from different sources and can be used in real time. For our purposes the main limitation is that these models are based on the Markov property. Thus, the estimated location at timepoint $k$ is often based only upon measurements at $k$ and the previous timepoint $k-1$. This may be suitable for ships at sea, but it ignores the highly periodic nature of human movement. Hierarchical structuring and conditioning on a larger context have been suggested as ways to improve their performance, but these are often computationally intractable or unfeasible [@sadilek_far_2016].
 
 ### Alternative models
 
@@ -91,7 +121,7 @@ Alternatives to state space models include long range-persistence models, such a
 
 ### Filtering & Mean imputation
 
-@palmius_detecting_2017 deal with measuremement inaccuracy of $D$ by removing from the data set all unique low-accuracy data points that had  $\frac{d}{dt}D > 100 \frac{km}{h}$. Subsequently the researchers down sample the data to a sample rate of 12 per hour using a median filter. Morever:
+@palmius_detecting_2017 deal with measuremement inaccuracy of $D$ by removing from the data set all unique low-accuracy data points that had  $\frac{d}{dt}D > 100 \frac{km}{h}$. Subsequently the researchers down sample the data to a sample rate of 12 per hour using a median filter. Moreover:
 
 >If the standard deviation of [$D$] in both latitude and longitude within a 1 h epoch was less than 0.01 km, then all samples within the hour were set to the mean value of the recorded data, otherwise a 5 min median filter window was applied to the recorded latitude and longitude in the epoch.
 
@@ -105,20 +135,18 @@ Missing data was imputed using the mean of measurements close in time if the par
 duration, and spatial length of each flight, the fraction of flights versus the fraction of
 pauses, and the duration of pauses are sampled from observed data
 
-This method can be extended to imputing the data based on temporally, spatially or periodically close flights and pauses. In other words, for a given missing period, the individual's mobility can be estimated based on  measured movements in that area, at that point in time or movements in the last 24 hours. 
+This method can be extended to imputing the data based on temporally, spatially or periodically close flights and pauses. In other words, for a given missing period, the individual's mobility can be estimated based on  measured movements in that area, at that point in time or movements in the last 24 hours.
+
+This paper is to the best of our knowledge the only attempt at establishing a principled approach to this problem
 
 ## Methods
 
-*An asside as to my conversation with Peter on 07.11*
-
-We can get some trackers on people to measure movement constantly and be a "golden standard" to evaluate the models.
-
-### Data & Analyses
+### Datasets & Analyses
 
 The data used was collected between 2014 and 2017 on different Android devices from X individuals across X continents. The table below provides more details:
 
-```{r datadetailsTable}
-datadetails <- readRDS("datadetails.rds")
+```{r datadetailsTable, echo = F}
+datadetails <- readRDS("tempdata/datadetails.rds")
 kable(datadetails,digits = 2,col.names = c("Log duration",
                                            "Observations",
                                            "Missing days",
@@ -126,13 +154,23 @@ kable(datadetails,digits = 2,col.names = c("Log duration",
                                            "SD Accuracy"))
 ```
 
+In addition to the secondary logs, participants also volunteered to carry with them a specialised GPS tracker for week. Therefore we also used a week of parallel secondary and specialised logs.
+
 Analyses were performed using R and a multitude of other packages [@ggplot2;@dplyr;@leaflet; @ggthemes;@base;@sp1;@sp2].
 
-### Model evaluation
-Models were evaluated using a test set and a train set. During a period of 7 days participants wore a professional GPS device (TRX-100) which reported location every minute. In addition, they continued using their phones as normal. Missing data was imputed for the week for which more accurate data was available. 
+### Data pre-processing
 
-Measures for which the accuracy was estimated include *barnett's path paper*.
+The data was discretised into 5 minute windows following @palmius_detecting_2017 (as described above, for more detail please consult the original paper). 
 
+### Imputation methods
+
+Four imputation methods were selected in order to cover techniques applied in the literature. Briefly, the filtered mean imputation method described by @palmius_detecting_2017, the model developed by @barnett_inferring_2016 as well as an adapted FarOut model [@sadilek_far_2016]. Simple Kalman filtered linear interpolation was used as a benchmark models. 
+
+### Evaluation criteria
+
+The entire length of the secondary logs were used as a training set. The specialised logs were used as a test set. The missing data imputation models were evaluated both directly, and on on two computed measures: amount of trips made and distance traveled.
+
+Measures of performance used were root mean square error (RMSE) and mean absolute error (MAE).
 
 ## Results
 

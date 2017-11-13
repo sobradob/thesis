@@ -21,15 +21,10 @@ bibliography: "bibliography"
 output: rticles::rss_article
 ---
 
-# Introduction
+$$
+\\R
+$$
 
-This template demonstrates some of the basic latex you'll need to know to create a RSS article.
-
-# R code
-
-Can be inserted in regular R markdown blocks.
-
-```{r}
-x <- 1:10
-x
-```
+$$
+\mathbb{R}^l
+$$
