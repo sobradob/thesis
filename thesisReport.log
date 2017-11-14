@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.11.3)  13 NOV 2017 22:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.11.3)  14 NOV 2017 18:40
 entering extended mode
 **./thesisReport.tex
 (thesisReport.tex
@@ -965,12 +965,12 @@ has been already used, duplicate ignored
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.231 
-       <./img/accuracyPeter.png>] <img/missingdayPeter.png, id=163, 495.2904pt 
-x 184.7703pt>
-File: img/missingdayPeter.png Graphic file (type png)
-<use img/missingdayPeter.png>
-Package pdftex.def Info: img/missingdayPeter.png used on input line 233.
-(pdftex.def)             Requested size: 469.7599pt x 175.24602pt.
+       <./img/accuracyPeter.png>] <img/missingdayPeter5min.png, id=163, 446.387
+7pt x 184.7703pt>
+File: img/missingdayPeter5min.png Graphic file (type png)
+<use img/missingdayPeter5min.png>
+Package pdftex.def Info: img/missingdayPeter5min.png used on input line 233.
+(pdftex.def)             Requested size: 446.39342pt x 184.77264pt.
 LaTeX Font Info:    Try loading font information for OT1+lmr on input line 247.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\lm\ot1lmr.fd"
@@ -1014,7 +1014,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.281 
-       <./img/missingdayPeter.png (PNG copy)>] [4]
+       <./img/missingdayPeter5min.png (PNG copy)>] [4]
 
 Package natbib Warning: Citation `leaflet' on page 5 undefined on input line 41
 3.
@@ -1062,7 +1062,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 462.
  ) 
 Here is how much of TeX's memory you used:
  13087 strings out of 493323
- 188322 string characters out of 3139043
+ 188338 string characters out of 3139043
  299325 words of memory out of 3000000
  16263 multiletter control sequences out of 15000+200000
  52053 words of font info for 101 fonts, out of 3000000 for 9000
@@ -1083,7 +1083,7 @@ Files/MiKTeX 2.9/fonts/type1/public/lm/lmri12.pfb><C:/Program Files/MiKTeX 2.9/
 fonts/type1/public/lm/lmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publi
 c/lm/lmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols
 /msbm10.pfb>
-Output written on thesisReport.pdf (9 pages, 1092539 bytes).
+Output written on thesisReport.pdf (9 pages, 1108201 bytes).
 PDF statistics:
  360 PDF objects out of 1000 (max. 8388607)
  64 named destinations out of 1000 (max. 500000)

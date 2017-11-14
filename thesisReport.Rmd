@@ -62,7 +62,7 @@ Missing data is a pervasive issue as it can arise due to multiple factors, both 
 
 ```{r, measurementsPerDay,echo = FALSE,fig.cap="Missing data over time for the author. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a day. The fill of the points shows the amount of hours of captured data each day.",out.width = '100%'}
 
-include_graphics("img/missingdayPeter.png")# from the playingaroundwiththicken.r file
+include_graphics("img/missingdayPeter5min.png")# from the missingadataplot.R script
 # to do: make into 5 minute slots
 
 ```
