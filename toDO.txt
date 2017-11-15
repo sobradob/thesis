@@ -1,0 +1,15 @@
+Trace data
+add notation after intro, we will devide the measurements into epochs, and define missing data as a 5 minute slot where the data is missing.
+Latitude, Longitude, Accuracy, Time. 
+
+#Plot optionL day in 24 hours with amount of measurements per each day in the data set.
+Each day is one dot, the amount of measurements are between 0 and infinate within one 5 minute slot.
+
+PLots:
+one day as an example, colour missing red, the add accuracy into the plot. 
+
+# Check Barnett's notation and use it. 
+
+Filtering methods accuracy, explain how we will filter the data and then combine it with an imputation method to compare effects. 
+
+How far from true location in M. Barnett evaluation of accuracy for distance. 
