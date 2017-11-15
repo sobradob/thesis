@@ -3,6 +3,7 @@ library(dplyr)
 library(padr)
 library(ggplot2)
 library(tibbletime)
+library(ggthemes)
 # read data
 all<-readRDS("../../data/peter/myLocationHistory.rds")
 attr(all$time, "tzone") <- "Europe/Paris"
@@ -60,6 +61,33 @@ m5min<- all %>%
 
 
 missingDay5min<- ggplot(m5min, aes(x = time_5_min_day, y=measurements, colour= min5Missing))+
+  geom_point()+theme_tufte()+
+  xlab("")+
+  ylab("Measurements")+
+  ggtitle("Missingness in daily measurements over time")+
+  scale_colour_gradient2(low = muted("green"), mid = "grey50",
+                         high = muted("red"), midpoint = 144, space = "Lab",
+                         na.value = "grey50", guide = "colourbar")+
+  labs(x = NULL, colour = "Missing \n5 minute\n segments")+
+  theme(legend.position = c(0.3, 0.85), legend.direction = "horizontal")
+
+ggsave(missingDay5min,filename = "../img/missingdayPeter5min.png",device = "png",height = 6.5, units = "cm")
+
+# by 5 minute version 2
+m5minv2<- all %>%
+  select(time) %>%
+  as_tbl_time(index = time) %>%
+  time_filter(2000-01 ~ 2017-06) %>% 
+  thicken('5 min') %>%
+  group_by(time_5_min) %>%
+  summarise(measurements = n()) %>%
+  pad() %>%
+  fill_by_value(value = 0)%>%
+  mutate(hour = as.POSIXct(
+    paste0("2014-01-22 ",
+           strftime(time_5_min,format = "%H:%M", tz = "Europe/Budapest"))))
+  
+ggplot(m5minv2, aes(x = hour, y=measurements))+
   geom_point()+theme_tufte()+
   xlab("")+
   ylab("Measurements")+
