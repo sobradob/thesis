@@ -49,8 +49,8 @@ In professional grade GPS trackers less than 80% of measurements fall within 10 
 Given that Android phones collect location information from WiFi access points, cellphone triangulation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005; @chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures fall with a 67% confidence radius of 20 meters. @palmius_detecting_2017 note that in their custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. I observe similar patterns in secondary logs. 
 
 ```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement. The x-axis denotes the accuracy in meters such that the user's actual location is expected to be within that radius with 67 percent confidence. Measures were classified into high accuracy (under 800m), medium accuracy (under 5000m) and low accuracy (over 5000m). Measures with accuracy of over 20000m were omitted from the graph. The maximum accuracy measure was over 40000m. Low accuracy measures are often near in time to more high accuracy measures.",out.width = '100%'}
-
-include_graphics("img/accuracyPeter.png")
+#
+include_graphics("img/journeyTillMiddayBoaz.png")
 
 ```
 
@@ -61,9 +61,8 @@ Missing data is a pervasive issue as it can arise due to multiple factors, both 
 
 
 ```{r, measurementsPerDay,echo = FALSE,fig.cap="Missing data over time for the author. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a day. The fill of the points shows the amount of hours of captured data each day.",out.width = '100%'}
-
-include_graphics("img/missingdayPeter5min.png")# from the missingadataplot.R script
-# to do: make into 5 minute slots
+#fix width
+include_graphics("img/missingBoaz5minExample.png")# from the missingadataplot.R script
 
 ```
 

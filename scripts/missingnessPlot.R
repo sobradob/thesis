@@ -4,6 +4,7 @@ library(padr)
 library(ggplot2)
 library(tibbletime)
 library(ggthemes)
+library(scales)
 # read data
 all<-readRDS("../../data/boaz/myLocationHistory.rds")
 attr(all$time, "tzone") <- "Europe/Paris"
@@ -75,12 +76,13 @@ ggsave(missingDay5min,filename = "../img/missingdayPeter5min.png",device = "png"
 
 # by 5 minute version 2
 m5minv2<- all %>%
-  select(time) %>%
+  select(time,accuracy) %>%
   as_tbl_time(index = time) %>%
   time_filter(2000-01 ~ 2017-06) %>% 
   thicken('5 min') %>%
   group_by(time_5_min) %>%
-  summarise(measurements = n()) %>%
+  summarise(measurements = n(),
+            accuracy = mean(accuracy)) %>%
   pad() %>%
   fill_by_value(value = 0)%>%
   mutate(
@@ -93,13 +95,26 @@ m5minv2<- all %>%
       measurements > 0 ~ 0)
       )
 
-m5minv2 %>%
+exampleMiss<- m5minv2 %>%
   as_tbl_time(index = time2)%>%
   time_filter(2017-02-15 ~ 2017-02-15) %>%
-  ggplot( aes(x = hour, y=measurements, colour = missing))+
+  ggplot( aes(x = hour, y=measurements, colour = factor(missing)))+
   geom_point()+theme_tufte()+
   xlab("")+
   ylab("Measurements")+
-  ggtitle("Missingness in daily measurements over time")
+  ggtitle("Measurements per 5 minute window")+
+  scale_x_datetime(breaks = date_breaks("4 hour"),
+                   minor_breaks=date_breaks("2 hour"),
+                   labels=date_format("%H:%M:%S", tz = "Asia/Singapore"))+
+  scale_colour_manual(values=c("black","#DF2935"))+
+  theme(legend.position="none")
+
+ggsave(exampleMiss,filename = "../img/missingBoaz5minExample.png",device = "png",height = 6.5, units = "cm")
+
+
+time1_p1 <- strptime(paste("2017-02-14", "00:00:00"), "%Y-%m-%d %H:%M:%S")
+time2_p1 <- strptime(paste("2017-02-16", "24:00:00"), "%Y-%m-%d %H:%M:%S")
+xlim_p1 <- as.POSIXct(c(time1_p1, time2_p1), origin="1970-01-01", tz="Asia/Singapore")
+
 
 ggsave(missingDay5min,filename = "../img/missingdayPeter5min.png",device = "png",height = 6.5, units = "cm")
