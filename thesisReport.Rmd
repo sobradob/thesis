@@ -38,21 +38,21 @@ There is currently no golden standard in how to deal with missing data in custom
 
 Given that there is next to no literature on missing data in custom or secondary logs it is worth illustrating the typical characteristics of this data using an example data set. Moreover, although we could find no published papers on dealing with missing data in secondary logs, there are methods which deal with similar problems. In this section we will describe the problems with the data and why they arise as well as the models which could be applied to it.
 
-## Missing data and noise in location logs
+## Location logs and notation
 
-This example data set comes from Google Location History and spans 3 years from January 2013 to January 2017 with multiple different Android devices. It contains 814 941 measurements, with approximately 742 measurements per day (*SD*=868.15). The data set contains a wide range of variables. For the purposes of this paper we will focus only on latitude, longitude, accuracy and time. Accuracy is defined as the size in meters of the radius of a circle such that 67% of the measurements fall within it.
+This example dataset comes from Google Location History and spans 3 years from January 2013 to January 2017 with multiple different Android devices. It contains 814 941 measurements, with approximately 742 measurements per day ($\widehat{\sigma}$=868.15). The dataset contains a wide range of variables. For the purposes of this paper we will focus only on latitude, longitude, accuracy and time.
+
+Borrowing from @barnett_inferring_2016 let a persons' true Cartesian location be $G(t) = [G_x(t) G_y(t)]$ and $D \in \mathbb{R}^2$ be the recorded data containing lattitude and longitude. In addition, let $a$ denote the estimated accuracy of the recorded data.  accuracy. $G(t)$, $D$ and $a$ are indexed by the set $t_1 < ... < t_{n+1}$. For simplicity, let each entry in the discrete index set represent a 5 minute window. The measure of accuracy $a_t$ is given in meters such that it represents the radius of a 67% confidence circle. If $D_t = \emptyset$ it is considered *missing* and it is not missing otherwise. 
 
 ### Accuracy in location logs 
 
-In professional grade GPS trackers less than 80% of measurements fall within 10 meters of the true location. GPS measures are reported to be most inaccurate in high density urban locations and indoors [@schipperijn_dynamic_2014;@duncan_portable_2013]. Unfortunately for social scientists, this happens to be where most people in the developed world tend to spend most of their time.
+In professional grade GPS trackers less than 80% of measurements $D$ fall within 10 meters of the true location $G(t)$. GPS measures are reported to be most inaccurate in high density urban locations and indoors [@schipperijn_dynamic_2014;@duncan_portable_2013]. Unfortunately for social scientists, this happens to be where most people in the developed world tend to spend most of their time.
 
-Given that Android phones collect location information from WiFi access points, cellphone triangulation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005; @chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures fall with a 67% confidence radius of 20 meters. @palmius_detecting_2017 note that in their custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. I observe similar patterns in secondary logs. 
-
-```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement. The x-axis denotes the accuracy in meters such that the user's actual location is expected to be within that radius with 67 percent confidence. Measures were classified into high accuracy (under 800m), medium accuracy (under 5000m) and low accuracy (over 5000m). Measures with accuracy of over 20000m were omitted from the graph. The maximum accuracy measure was over 40000m. Low accuracy measures are often near in time to more high accuracy measures.",out.width = '100%'}
-#
+```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement in a morning journey. The red circles denote the accuracy of all logged measurement points (the raw data). The points connected in time are connected by a line. The blue line shows the path without the most innaccurate (accurace > 400 meters) points filtered out. The red line shows the path with all measurements included. ",out.width = '100%'}
 include_graphics("img/journeyTillMiddayBoaz.png")
-
 ```
+
+Given that Android phones collect location information from WiFi access points, cellphone triangulation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005; @chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures $D$ are paired with $a \leq 20$. @palmius_detecting_2017 note that in their custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. I observe similar patterns in secondary logs. 
 
 
 ### Missingness
@@ -60,17 +60,15 @@ include_graphics("img/journeyTillMiddayBoaz.png")
 Missing data is a pervasive issue as it can arise due to multiple factors, both technical and behavioural. Technical reasons include signal loss, battery failure and device failure. Behavioural reasons include leaving the phone at home, switching the phone off, switching location measurements off, and so on. As a result, applied researchers are often left with wide temporal gaps with no measurements. For instance, different groups studying the effect of bipolar disorder on human movement have reported missing data rates between 30% to 50% [@saeb_mobile_2015;@grunerbl_smartphone-based_2015;@palmius_detecting_2017]. Similar trends are consistently reported in other fields [e.g. @harari_using_2016;@jankowska_framework_2015].
 
 
-```{r, measurementsPerDay,echo = FALSE,fig.cap="Missing data over time for the author. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a day. The fill of the points shows the amount of hours of captured data each day.",out.width = '100%'}
+```{r, measurementsPerDay,echo = FALSE,fig.cap="Example of missing data over a day. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information.",out.width = '100%'}
 #fix width
-include_graphics("img/missingBoaz5minExample.png")# from the missingadataplot.R script
+include_graphics("img/missingBoaz5minExample.png")
 
 ```
 
 ## State of the art in spatiotemporal models
 
 Research with respect to the analysis of GPS data is wideranging, highly interdisciplinary and serves vastly different purposes. The following section briefly illustrates some methods used to deal with measurement inaccuracy and missing data problems in spatiotemporal data, as well as their applicability to our question. Moreover, we discuss in detail two approaches which deal explicitly with missing data in smartphone measured human location.
-
-Let $d \in \mathbb{R}^3$ be the recorded data containing lattitude, longitude, accuracy and $l \in \mathbb{R}^3$ be actual location in space. $d_k$ and $l_k$ denote the measured location and the true location at time $k$. 
 
 ### Spatiotemporal Imputation Methods
 
@@ -82,37 +80,7 @@ While @feng_cutoff:_2014 claim their model could be used to establish mobility p
 
 There is a vast literature of using state space models (SSMs) to improve measurements accuracy and deal with missing data. Behavioural ecologists for instance, have used SSMs extensively to explain how animals interact with their environment [@patterson_statespace_2008]. These models can be quite complex, for example @preisler_modeling_2004 uses Markovian movement processes to characterise the effect of roads, food patches and streams on cyclical elk movements. The most well studied SSM is the Kalman filter, which is the optimal algorithm for inferring linear Gaussian systems. The extended Kalman filter is the de facto standard for GPS navigation [@chen_state_2013].
 
-The state equation of the Kalman filter models the current location:
-
-$$
-l_k = Al_{k-1} + Bu_{k-1}+w_{k-1}
-$$
-Here $w_k$ is known as the process noise and is conceptually equivalent to the error term in a linear regression. $A$ is a square matrix of order $n$ which relates our current state to the previous state. $B$ is an $n \times x$ matrix which relates the optional control input $u \in \mathbb{R}^x$ to the state $l$.
-
-The measurement equation models the measurements at any given time:
-
-$$
-d_k = H l_k +v_k
-$$
-
-$v_k$ is known as the measurement noise and represents the errors in measurement and $H$ is an $m \times n$  matrix relating the state to the measurement.
-
-The noise in both equations assumed to be:
-
-$$p(w) \sim N(0,Q)$$
-
-$$p(v) \sim N(0,R)$$
-Where $Q$ is the process noise covariance matrix and $R$ is the measurement noise covariance.
-
-Then, let $\widehat{l}^{-}_k \in \mathbb{R}^n$ be the a priori state estimate given our knowledge of the process and $\widehat{l}_k \in \mathbb{R}^n$ be the a posteriori state estimate at step $k$ given measurement $d_k$. These two state estimates have error covariances denoted $P^{-}_k$ and $P_k$ respectively. Algebraically the Kalman filter can then be written as:
-
-$$
-\widehat{x}_k = \widehat{x}^{-}_k + K (z_k - H \widehat{x}^{-}_k)
-$$
-
-Where $K$ (the weight or Kalman gain) is a square matrix order $n \times m$ matrix which minimizes the posteriori error covariance.
-
-The advantage of state space models is that they are flexible, deal with measurement inaccuracy, include information from different sources and can be used in real time. For our purposes the main limitation is that these models are based on the Markov property. Thus, the estimated location at timepoint $k$ is often based only upon measurements at $k$ and the previous timepoint $k-1$. This may be suitable for ships at sea, but it ignores the highly periodic nature of human movement. Hierarchical structuring and conditioning on a larger context have been suggested as ways to improve their performance, but these are often computationally intractable or unfeasible [@sadilek_far_2016].
+The advantage of state space models is that they are flexible, deal with measurement inaccuracy, include information from different sources and can be used in real time. For our purposes the main limitation is that these models are based on the Markov property. Thus, the estimated location $G(t)$ at timepoint $t$ is often based only upon measurements $D_t$, $D_{t-1}$ and ignores all $D_{t-i}|i\geq2$. This may be suitable for ships at sea, but it ignores the highly periodic nature of human movement. Hierarchical structuring and conditioning on a larger context have been suggested as ways to improve their performance, but these are often computationally intractable or unfeasible [@sadilek_far_2016].
 
 ### Alternative models
 
@@ -120,7 +88,7 @@ Alternatives to state space models include long range-persistence models, such a
 
 ### Filtering & Mean imputation
 
-@palmius_detecting_2017 deal with measuremement inaccuracy of $D$ by removing from the data set all unique low-accuracy data points that had  $\frac{d}{dt}D > 100 \frac{km}{h}$. Subsequently the researchers down sample the data to a sample rate of 12 per hour using a median filter. Moreover:
+@palmius_detecting_2017 deal with measuremement inaccuracy of $D$ by removing from the data set all unique low-accuracy $a$ data points that had  $\frac{d}{dt}D > 100 \frac{km}{h}$. Subsequently the researchers down sample the data to a sample rate of 12 per hour using a median filter. Moreover:
 
 >If the standard deviation of [$D$] in both latitude and longitude within a 1 h epoch was less than 0.01 km, then all samples within the hour were set to the mean value of the recorded data, otherwise a 5 min median filter window was applied to the recorded latitude and longitude in the epoch.
 

@@ -109,7 +109,7 @@ exampleMiss<- m5minv2 %>%
   scale_colour_manual(values=c("black","#DF2935"))+
   theme(legend.position="none")
 
-ggsave(exampleMiss,filename = "../img/missingBoaz5minExample.png",device = "png",height = 6.5, units = "cm")
+ggsave(exampleMiss,filename = "../img/missingBoaz5minExample.png",device = "png",height = 6.5, width = 18, units = "cm")
 
 
 time1_p1 <- strptime(paste("2017-02-14", "00:00:00"), "%Y-%m-%d %H:%M:%S")
