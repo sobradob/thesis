@@ -6,10 +6,13 @@ Latitude, Longitude, Accuracy, Time.
 Each day is one dot, the amount of measurements are between 0 and infinate within one 5 minute slot.
 
 PLots:
-one day as an example, colour missing red, the add accuracy into the plot. 
+two plots: feb 15 with number of measurements with missing in red.
+feb 15 with accuracy on y axis day on x axis.
 
 # Check Barnett's notation and use it. 
 
 Filtering methods accuracy, explain how we will filter the data and then combine it with an imputation method to compare effects. 
 
-How far from true location in M. Barnett evaluation of accuracy for distance. 
+How far from true location in M. Barnett evaluation of accuracy for distance.
+
+Fill table. 

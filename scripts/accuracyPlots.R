@@ -10,6 +10,7 @@ all<-readRDS("../../data/boaz/myLocationHistory.rds")
 
 all$time<- lubridate::with_tz(all$time, "Europe/Budapest")# don't forget to run
 
+#discarded histogram like plot
 
 accData <- all %>% select(accuracy) %>% filter (accuracy < 20000)
 accuracy <- data.frame(accuracy = accData$accuracy,
@@ -73,24 +74,34 @@ all %>%
 #52.10421 5.113919 
 home<- c(5.113919,52.10421)
 #calculate distance from home
-
-all %>%
+filter(distancePrev >.005) %>%
+  
+locShift<- all %>%
   select(time,lon,lat,accuracy) %>%
   as_tbl_time(index = time) %>%
   time_filter(2017-02-15 ~ 2017-02-15)%>%
   mutate( distanceHome = sp::spDistsN1(pts=matrix(c(lon,lat),ncol = 2),
-          pt = home,
-          longlat = T),
+                                       pt = home,
+                                       longlat = T),
           euclon = lon-home[1],
           euclat = lat-home[2],
-          time2 = lubridate::force_tz(time, "Asia/Singapore")) %>% 
-  ggplot( aes(x = time2, y=accuracy))+
+          time2 = lubridate::force_tz(time, "Asia/Singapore"),
+          distancePrev = c(0,
+                           sp::spDists(x=matrix(c(lon,lat),ncol = 2), segments = T))) %>%
+  ggplot( aes(x = time2, y=accuracy, colour = distancePrev*1000))+
   geom_point()+theme_tufte()+
   scale_x_datetime(breaks = date_breaks("4 hour"),
                    minor_breaks=date_breaks("2 hour"),
                    labels=date_format("%H:%M:%S", tz = "Asia/Singapore"),
-                   limits = xlim_p1)
+                   limits = xlim_p1)+
+  xlab("")+ylab("Accuracy")+
+  scale_colour_gradient2(low = "#DF2935", mid = "grey50",
+                         high = "#18206F", space = "Lab",
+                         na.value = "grey50", guide = "colourbar")+
+  theme(legend.position = c(0.17, 0.85), legend.direction = "horizontal") +
+  labs(x = NULL, colour = "Distance from\nprevious point")
 
+ggsave(locShift,filename = "../img/accuracyLocShift.png",device = "png",height = 6.5,width = 20, units = "cm")
 
 time1_p1 <- strptime(paste("2017-02-15", "00:00:00"), "%Y-%m-%d %H:%M:%S")
 time2_p1 <- strptime(paste("2017-02-15", "24:00:00"), "%Y-%m-%d %H:%M:%S")
@@ -101,6 +112,30 @@ ggplot(alls, aes(x = time2, y=accuracy))+
 
 ggplot(alls,aes(x = euclon,y = euclat, colour = accuracy))+geom_point()+theme_tufte()
 
-# missing: number of inaccurate measurements visualised effectively
-# missing: arrows showing movmeent
+# create simple histograms
+
+day1<- all %>%
+  select(time,lon,lat,accuracy) %>%
+  as_tbl_time(index = time) %>%
+  time_filter(2017-02-15 ~ 2017-02-15) %>%
+  select(accuracy) %>%
+  mutate(unit = "day")
+
+week1<- all %>%
+  select(time,lon,lat,accuracy) %>%
+  as_tbl_time(index = time) %>%
+  time_filter(2017-01-08 ~ 2017-01-15) %>%
+  select(accuracy)%>%
+  mutate(unit = "week")
+
+year1<- all %>%
+  select(time,lon,lat,accuracy) %>%
+  as_tbl_time(index = time) %>%
+  time_filter(2016-01-15 ~ 2017-02-15) %>%
+  select(accuracy) %>%
+  mutate(unit = "year")
+
+x<- bind_rows(day1,week1)
+
+ggplot(x, aes(x=unit, y=accuracy)) + geom_boxplot()
 

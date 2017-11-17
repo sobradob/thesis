@@ -42,7 +42,7 @@ Given that there is next to no literature on missing data in custom or secondary
 
 This example dataset comes from Google Location History and spans 3 years from January 2013 to January 2017 with multiple different Android devices. It contains 814 941 measurements, with approximately 742 measurements per day ($\widehat{\sigma}$=868.15). The dataset contains a wide range of variables. For the purposes of this paper we will focus only on latitude, longitude, accuracy and time.
 
-Borrowing from @barnett_inferring_2016 let a persons' true Cartesian location be $G(t) = [G_x(t) G_y(t)]$ and $D \in \mathbb{R}^2$ be the recorded data containing lattitude and longitude. In addition, let $a$ denote the estimated accuracy of the recorded data.  accuracy. $G(t)$, $D$ and $a$ are indexed by the set $t_1 < ... < t_{n+1}$. For simplicity, let each entry in the discrete index set represent a 5 minute window. The measure of accuracy $a_t$ is given in meters such that it represents the radius of a 67% confidence circle. If $D_t = \emptyset$ it is considered *missing* and it is not missing otherwise. 
+Borrowing from @barnett_inferring_2016 let a persons' true Cartesian location on an error minimising projection be $G(t) = [G_x(t) G_y(t)]$ and $D \in \mathbb{R}^2$ be the recorded data containing lattitude and longitude. In addition, let $a$ denote the estimated accuracy of the recorded data.  accuracy. $G(t)$, $D$ and $a$ are indexed by the set $t_1 < ... < t_{n+1}$. For simplicity, let each entry in the discrete index set represent a 5 minute window. The measure of accuracy $a_t$ is given in meters such that it represents the radius of a 67% confidence circle. If $D_t = \emptyset$ it is considered *missing* and it is not missing otherwise. 
 
 ### Accuracy in location logs 
 
@@ -52,13 +52,18 @@ In professional grade GPS trackers less than 80% of measurements $D$ fall within
 include_graphics("img/journeyTillMiddayBoaz.png")
 ```
 
-Given that Android phones collect location information from WiFi access points, cellphone triangulation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005; @chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set, less than 40% of measures $D$ are paired with $a \leq 20$. @palmius_detecting_2017 note that in their custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. I observe similar patterns in secondary logs. 
+Given that Android phones collect location information from WiFi access points, cellphone triangulation, and GPS measurements due to computational and battery constraints [@lamarca_place_2005; @chen_practical_2006], the accuracy is substantially lower than in professional grade GPS trackers. Based on this data set the distribution of $a$ is highly right skewed, with a median of 28, $\mu = 127$ and the maximum value at 26 km. @palmius_detecting_2017 note that in their custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. I observe similar patterns in secondary logs. 
 
+```{r, accuracyPlot2, echo=FALSE, fig.cap="The accuracy of raw measures with time on the x-axis and accuracy on the y-axis. The colour scale shows the distance between the measurement and the previous point. To ease interpretability all points with a distance between points of less than 5 meters have been filtered out.",out.width = '100%'}
+include_graphics("img/accuracyLocShift.png")
+
+```
 
 ### Missingness
 
 Missing data is a pervasive issue as it can arise due to multiple factors, both technical and behavioural. Technical reasons include signal loss, battery failure and device failure. Behavioural reasons include leaving the phone at home, switching the phone off, switching location measurements off, and so on. As a result, applied researchers are often left with wide temporal gaps with no measurements. For instance, different groups studying the effect of bipolar disorder on human movement have reported missing data rates between 30% to 50% [@saeb_mobile_2015;@grunerbl_smartphone-based_2015;@palmius_detecting_2017]. Similar trends are consistently reported in other fields [e.g. @harari_using_2016;@jankowska_framework_2015].
 
+In our example data set, over 54% of the data is missing for the entire duration of the log. However,this is misleading as there are several long periods with no measurements whatsoever. The typical strucutre of missingness of a day with measurements is shown below. 
 
 ```{r, measurementsPerDay,echo = FALSE,fig.cap="Example of missing data over a day. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information.",out.width = '100%'}
 #fix width
@@ -112,13 +117,15 @@ This paper is to the best of our knowledge the only attempt at establishing a pr
 
 The data used was collected between 2014 and 2017 on different Android devices from X individuals across X continents. The table below provides more details:
 
-```{r datadetailsTable, echo = F}
-datadetails <- readRDS("tempdata/datadetails.rds")
+```{r datadetailsTable, echo = F, fig.cap="caption here?"}
+datadetails <- readRDS("tempdata/datadescriptives.rds")
+datadetails <- datadetails[,-7]
 kable(datadetails,digits = 2,col.names = c("Log duration",
+                                           "Days of log",
                                            "Observations",
                                            "Missing days",
-                                           "Mean Accuracy",
-                                           "SD Accuracy"))
+                                           "Missing data",
+                                           "Mean Accuracy"))
 ```
 
 In addition to the secondary logs, participants also volunteered to carry with them a specialised GPS tracker for week. Therefore we also used a week of parallel secondary and specialised logs.

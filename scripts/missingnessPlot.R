@@ -13,7 +13,7 @@ attr(all$time, "tzone") <- "Europe/Paris"
 mHour<- all %>%
   select(time) %>%
   as_tbl_time(index = time) %>%
-  time_filter(2000-01 ~ 2017-06) %>% 
+  time_filter(2016-01 ~ 2017-01) %>% 
   thicken('hour') %>%
   group_by(time_hour) %>%
   summarise(measurements = n()) %>%
@@ -60,6 +60,11 @@ m5min<- all %>%
   summarise(min5Missing = sum(type),
             measurements = sum(measurements))
 
+#calculating descriptives
+
+m5min %>%
+  select(type) %>%
+  summarise(mean(type))
 
 missingDay5min<- ggplot(m5min, aes(x = time_5_min_day, y=measurements, colour= min5Missing))+
   geom_point()+theme_tufte()+
