@@ -115,41 +115,41 @@ This paper is to the best of our knowledge the only attempt at establishing a pr
 
 ### Datasets & Analyses
 
-The data used was collected between 2014 and 2017 on different Android devices from X individuals across X continents. The table below provides more details:
+The data used to train the imputation methods was collected between 2013 and 2017 on different Android devices from several individuals. The table below provides more details:
 
-```{r datadetailsTable, echo = F, fig.cap="caption here?"}
+```{r datadetailsTable, echo = F}
 datadetails <- readRDS("tempdata/datadescriptives.rds")
-datadetails <- datadetails[,-7]
+datadetails <- datadetails[,-7] #remove last column for now
 kable(datadetails,digits = 2,col.names = c("Log duration",
-                                           "Days of log",
+                                           "Logged days",
                                            "Observations",
                                            "Missing days",
                                            "Missing data",
-                                           "Mean Accuracy"))
+                                           "Mean Accuracy"),
+      caption = "Table with descriptives about the data sets used to build the imputation methods. ")
 ```
 
-In addition to the secondary logs, participants also volunteered to carry with them a specialised GPS tracker for week. Therefore we also used a week of parallel secondary and specialised logs.
+In addition to the secondary logs, participants also volunteered to carry with them a specialised GPS tracker for a week. This specialised log was used to evaluate the models. 
 
 Analyses were performed using R and a multitude of other packages [@ggplot2;@dplyr;@leaflet; @ggthemes;@base;@sp1;@sp2].
 
 ### Data pre-processing
 
-The data was discretised into 5 minute windows following @palmius_detecting_2017 (as described above, for more detail please consult the original paper). 
+Three different filtering methods were tested. First, the filtered rolling-median downsampling method described by @palmius_detecting_2017. The second method is a weighted mean approach taking $f(a)$ as a weight. Finally, an extended Kalman filter. The output of all of these methods was taken as the input of the imputation methods.  
 
 ### Imputation methods
 
-Four imputation methods were selected in order to cover techniques applied in the literature. Briefly, the filtered mean imputation method described by @palmius_detecting_2017, the model developed by @barnett_inferring_2016 as well as an adapted FarOut model [@sadilek_far_2016]. Simple Kalman filtered linear interpolation was used as a benchmark models. 
+Four imputation methods were selected in order to cover techniques applied in the literature. Briefly, the mean imputation method described by @palmius_detecting_2017, the model developed by @barnett_inferring_2016 as well as an adapted FarOut model [@sadilek_far_2016]. Simple linear interpolation was used as a benchmark model. 
 
 ### Evaluation criteria
 
 The entire length of the secondary logs were used as a training set. The specialised logs were used as a test set. The missing data imputation models were evaluated both directly, and on on two computed measures: amount of trips made and distance traveled.
 
-Measures of performance used were root mean square error (RMSE) and mean absolute error (MAE).
+The direct evaluation involved calculating the error of each $D_t$ compared to $G(t)$ approximated by the specialised log. The error measures used were root mean square error (RMSE) and mean absolute error (MAE).
+
+The evaluation on computed measures involved calculating a mobility trace following the rectangual method of @rhee_human_2007 for each imputed dataset. Like @barnett_inferring_2016 I calculate bias by substracting the estimated measure under each approach for the same measure calculated on the full data. For simulation-based imputation approaches a mean value over 100 samples was taken.
 
 ## Results
-
-![Raw GPS measurements of a journey from de Uithof to Tuinwijk on February 17th 2017. The measurements are in red, the filtered path is in blue. The circles denote 67% confidence intervals of the given GPS measurement. Measurements and fitted points which follow each other in time are connected by lines. The inacurate measurements lead to estimates of irregular movements. The filtered movement estimate seems more accurate in terms of the path, but lags behind the unfiltered movement.](img/Map1.png)
-
 
 ## Discussion
 
