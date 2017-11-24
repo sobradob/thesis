@@ -15,4 +15,7 @@ Filtering methods accuracy, explain how we will filter the data and then combine
 
 How far from true location in M. Barnett evaluation of accuracy for distance.
 
-Fill table. 
+Fill table.
+
+Add more introduction, merge it with problem description, write very explicitly each paragraph.
+
