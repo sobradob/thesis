@@ -1,0 +1,20 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+
+\caption{\label{tab:datadetailsTable}Table with descriptives about the data sets used to build the imputation methods. }
+\centering
+\begin{tabular}[t]{l|r|r|r|r|r}
+\hline
+Log duration & Logged days & Observations & Missing days & Missing data & Mean Accuracy\\
+\hline
+From 2013-02-06 to 2017-03-29 & 1512 & 646376 & 635 & 0.22 & 127.78\\
+\hline
+From 2016-07-14 to 2017-05-10 & 300 & 158382 & 3 & 0.41 & 1394.60\\
+\hline
+From 2014-01-22 to 2017-01-23 & 1097 & 814941 & 80 & 0.25 & 121.83\\
+\hline
+\end{tabular}
+\end{table*}
+\efloatseparator
+ 

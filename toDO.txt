@@ -1,3 +1,8 @@
+Settle on a journal for publication
+Options:
+Royal Society Open Science
+Paying ones?
+
 Trace data
 add notation after intro, we will devide the measurements into epochs, and define missing data as a 5 minute slot where the data is missing.
 Latitude, Longitude, Accuracy, Time. 
@@ -19,3 +24,6 @@ Fill table.
 
 Add more introduction, merge it with problem description, write very explicitly each paragraph.
 
+Imagemagick fixed, perhaps create new plot explaining data types. 
+
+Added APA version, citations are broken

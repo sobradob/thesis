@@ -1,30 +1,52 @@
 ---
-title: 'Handling missing data in smartphone location logs'
-author: "Boaz Sobrado"
-date: "`r format(Sys.time(), '%d %B %Y')`"
+title             : "Handling missing data in smartphone location logs"
+shorttitle        : "Missing Data in Smartphone Location Logs"
+
+author: 
+  - name          : "Boaz Sobrado"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Postal address"
+    email         : "boaz@boazsobrado.com"
+
+affiliation:
+  - id            : "1"
+    institution   : "Utrecht University"
+
+author_note: |
+  Department of Methodology & Statistics
+
+  Submitted as a research report.
+
+abstract: |
+  Using objective location data to infer the mobility measures of individuals is highly desirable, but methodologically difficult. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human mobility in order to impute missing data values. Moreover, we will assess the performance of the model relative to currently used methods, such as linear interpolation.
+  
+keywords          : "GPS, Human Mobility"
+wordcount         : "X"
+
 bibliography:
   - thesisGPS.bib
   - rReferences.bib
-output:
-  rmarkdown::pdf_document:
-    citation_package: natbib
-    fig_caption: yes        
-    includes:  
-      in_header: tp2.tex
 
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : yes
+
+lang              : "english"
+class             : "man"
+output            : papaja::apa6_pdf
+citation_package: natbib
 ---
 
-```{r setup, include=FALSE}
+```{r load_packages, include = FALSE}
+library("papaja")
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 library(ggthemes)
 library(ggplot2)
 library(knitr)
 ```
-
-# Abstract
-*Using objective location data to infer the mobility measures of individuals is highly desirable, but methodologically difficult. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human mobility in order to impute missing data values. Moreover, we will assess the performance of the model relative to currently used methods, such as linear interpolation.*
-
-# Introduction
 
 How active people are and how they interact with their environment affects a wide range of outcomes including health, income and social capital [@goodchild_toward_2010]. A better understanding of both within-person and between-person variability in geospatial patterns could be conducive to better social, health and urban-planning policies. Yet a large part of studies on human mobility are largely based on pen-and-paper travel diaries. These surveys have known methodological flaws, such as the short period of data collection (due to costs and burden to respondents), the underreporting of short trips [@wolf_impact_2003] and the underestimation of the duration of commutes [@delclos-alio_keeping_2017]. 
 
@@ -139,9 +161,10 @@ The output of all of these methods was taken as the input of the imputation meth
 Three imputation methods were selected in order to cover a wide range of techniques applied in the literature:
 
 1. Mean imputation as described by @palmius_detecting_2017.
-2. The model developed by @barnett_inferring_2016 using both spatial and temporal proximity.
+2. The model developed by @barnett_inferring_2016 using spatial, temporal and circadian proximity.
 3. Simple linear interpolation was used as a benchmark model.
  
+
 ### Evaluation criteria
 
 The entire length of the secondary logs were used as a training set. The specialised logs were used as a test set. The missing data imputation models were evaluated both directly, and on two computed measures: amount of trips made and distance traveled.
@@ -150,6 +173,9 @@ The direct evaluation involved calculating the error of each $D_t$ compared to $
 
 The evaluation on computed measures involved calculating a mobility trace following the rectangular method of @rhee_human_2007 for each imputed dataset. Like @barnett_inferring_2016 we calculate bias by substracting the estimated measure under each approach for the same measure calculated on the full data. For simulation-based imputation approaches a mean value over 100 samples was taken.
 
-Each imputation method used each of the three filtering methods as an input. Thus in the end we end up with eight methods to evaluate, three for each filtering method as well as four for each imputation method.
+\newpage
 
-## References
+# References
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
