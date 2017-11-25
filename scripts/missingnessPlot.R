@@ -71,13 +71,12 @@ missingDay5min<- ggplot(m5min, aes(x = time_5_min_day, y=measurements, colour= m
   xlab("")+
   ylab("Measurements")+
   ggtitle("Missingness in daily measurements over time")+
-  scale_colour_gradient2(low = muted("green"), mid = "grey50",
+  scale_colour_gradient2(low = "black", mid = "grey50",
                          high = muted("red"), midpoint = 144, space = "Lab",
                          na.value = "grey50", guide = "colourbar")+
-  labs(x = NULL, colour = "Missing \n5 minute\n segments")+
-  theme(legend.position = c(0.3, 0.85), legend.direction = "horizontal")
+  labs(x = NULL, colour = "Missing \n5 minute\n segments")
 
-ggsave(missingDay5min,filename = "../img/missingdayPeter5min.png",device = "png",height = 6.5, units = "cm")
+ggsave(missingDay5min,filename = "../img/missingdayBoaz5min.png",device = "png",height = 6.5, , width = 18, units = "cm")
 
 # by 5 minute version 2
 m5minv2<- all %>%
@@ -111,7 +110,7 @@ exampleMiss<- m5minv2 %>%
   scale_x_datetime(breaks = date_breaks("4 hour"),
                    minor_breaks=date_breaks("2 hour"),
                    labels=date_format("%H:%M:%S", tz = "Asia/Singapore"))+
-  scale_colour_manual(values=c("black","#DF2935"))+
+  scale_colour_manual(values=c("black",muted("red")))+
   theme(legend.position="none")
 
 ggsave(exampleMiss,filename = "../img/missingBoaz5minExample.png",device = "png",height = 6.5, width = 18, units = "cm")

@@ -54,7 +54,7 @@ Let a persons' true location on this two-dimensional plane be $G(t) = [G_x(t) G_
 
 ### Accuracy in location logs 
 
-In the example data set the distribution of $a$ is highly right skewed, with a median of 28, $\mu = 127$ and the maximum value at 26 km. @palmius_detecting_2017 note that in their Android based custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. We observe similar patterns in secondary logs. Figure 1 shows how accuracy tends to vary as a function of user behaviour, time and location. There are several recurring low-accuracy points, most likely cell-phone triangulation towers.  
+In the example data set the distribution of $a$ is highly right skewed, with a median of 28, $\mu = 127$ and the maximum value at 26 km. @palmius_detecting_2017 note that in their Android based custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. We observe similar patterns in secondary logs. Figure 1 shows how accuracy can vary as a function of user behaviour, time and location. Most notably, accuracy tends to be lowest during movement. Stationary accuracy varies depending on phone battery level, wifi connection and user phone use. There are several recurring low-accuracy points, most likely cell-phone triangulation towers. 
 
 ```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement in a morning journey. The red circles denote the accuracy of all logged measurement points (the raw data). The points connected in time are connected by a line. The blue line shows the path without the most inaccurate (accuracy > 400 meters) points filtered out. The red line shows the path with all measurements included. ",out.width = '100%'}
 include_graphics("img/journeyTillMiddayBoaz.png")
@@ -68,12 +68,17 @@ include_graphics("img/accuracyLocShift.png")
 
 ### Missingness
 
-Over 54% of the data is missing for the entire duration of the log. However,this is misleading as there are several long periods with no measurements whatsoever. The structure of missingness of a day with measurements is shown below. 
+Over 54% of the data is missing for the entire duration of the log (as shown in Figure X a). However,this is misleading as there are several long periods with no measurements whatsoever. The structure of missingness of a day with measurements is shown in Figure X b. As you can see, there are several long periods over the course of the log for which there are no measurements. Moreover, even during a single day there are continuous periods where there is missing data, mostly during the late hours of the night in this case. 
+
+```{r, longMeasurementsPerDay,echo = FALSE,fig.cap="Example of missing data over the entire duration of the log. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information. These points are filled with red and lie on the x-axis.",out.width = '100%'}
+
+include_graphics("img/missingdayBoaz5min.png")
+
+```
 
 ```{r, measurementsPerDay,echo = FALSE,fig.cap="Example of missing data over a day. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information. These points are filled with red and lie on the x-axis.",out.width = '100%'}
 #fix width
 include_graphics("img/missingBoaz5minExample.png")
-
 ```
 
 ## Current methods for imputing missing spatiotemporal data
