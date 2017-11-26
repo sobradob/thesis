@@ -6,7 +6,6 @@ ac <- image_read("../img/accuracyLocShift.png")
 im2 <- c(inac,ac)
 x<- image_append(image_scale(im2,"x500"))
 image_write(x,"../img/accPlots.png")
-# doesnt; work
 
 
 image_mosaic(ac, inac)
