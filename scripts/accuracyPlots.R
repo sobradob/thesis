@@ -1,14 +1,27 @@
 ## plots on accuracy
+
+#set location to source file
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 # missing days with padr
 library(dplyr)
 library(padr)
 library(ggplot2)
 library(tibbletime)
+library(ggthemes)
+library(scales)
+
 # read data
-all<-readRDS("../../data/peter/myLocationHistory.rds")
+#all<-readRDS("../../data/peter/myLocationHistory.rds")
 all<-readRDS("../../data/boaz/myLocationHistory.rds")
 
 all$time<- lubridate::with_tz(all$time, "Europe/Budapest")# don't forget to run
+
+# general variables
+time1_p1 <- strptime(paste("2017-02-15", "00:00:00"), "%Y-%m-%d %H:%M:%S")
+time2_p1 <- strptime(paste("2017-02-15", "24:00:00"), "%Y-%m-%d %H:%M:%S")
+xlim_p1 <- as.POSIXct(c(time1_p1, time2_p1), origin="1970-01-01", tz="Europe/Budapest")
+
 
 #discarded histogram like plot
 
@@ -74,8 +87,7 @@ all %>%
 #52.10421 5.113919 
 home<- c(5.113919,52.10421)
 #calculate distance from home
-filter(distancePrev >.005) %>%
-  
+
 locShift<- all %>%
   select(time,lon,lat,accuracy) %>%
   as_tbl_time(index = time) %>%
@@ -102,10 +114,6 @@ locShift<- all %>%
   labs(x = NULL, colour = "Distance from\nprevious point")
 
 ggsave(locShift,filename = "../img/accuracyLocShift.png",device = "png",height = 6.5,width = 20, units = "cm")
-
-time1_p1 <- strptime(paste("2017-02-15", "00:00:00"), "%Y-%m-%d %H:%M:%S")
-time2_p1 <- strptime(paste("2017-02-15", "24:00:00"), "%Y-%m-%d %H:%M:%S")
-xlim_p1 <- as.POSIXct(c(time1_p1, time2_p1), origin="1970-01-01", tz="Asia/Singapore")
 
 ggplot(alls, aes(x = time2, y=accuracy))+
   geom_point()

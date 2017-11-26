@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.11.3)  25 NOV 2017 21:27
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.11.3)  26 NOV 2017 21:43
 entering extended mode
 **./thesisReport.tex
 (thesisReport.tex
@@ -994,49 +994,49 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [2] <img/journeyTillMiddayBoaz.png, id=145, 1096.84781pt x 462.22687pt>
 File: img/journeyTillMiddayBoaz.png Graphic file (type png)
 <use img/journeyTillMiddayBoaz.png>
-Package pdftex.def Info: img/journeyTillMiddayBoaz.png used on input line 264.
+Package pdftex.def Info: img/journeyTillMiddayBoaz.png used on input line 266.
 (pdftex.def)             Requested size: 469.74414pt x 197.95668pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--264
+Underfull \hbox (badness 10000) in paragraph at lines 266--266
 [][]
  []
 
 <img/accuracyLocShift.png, id=146, 569.0058pt x 184.7703pt>
 File: img/accuracyLocShift.png Graphic file (type png)
 <use img/accuracyLocShift.png>
-Package pdftex.def Info: img/accuracyLocShift.png used on input line 268.
+Package pdftex.def Info: img/accuracyLocShift.png used on input line 270.
 (pdftex.def)             Requested size: 469.75682pt x 152.54167pt.
 [3pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.281 
+l.283 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
 2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.281 
+l.283 
        <./img/journeyTillMiddayBoaz.png (PNG copy)> <./img/accuracyLocShift.png
- (PNG copy)>] <img/missingdayBoaz5min.png, id=154, 511.9125pt x 184.7703pt>
+>] <img/missingdayBoaz5min.png, id=155, 511.9125pt x 184.7703pt>
 File: img/missingdayBoaz5min.png Graphic file (type png)
 <use img/missingdayBoaz5min.png>
-Package pdftex.def Info: img/missingdayBoaz5min.png used on input line 283.
+Package pdftex.def Info: img/missingdayBoaz5min.png used on input line 285.
 (pdftex.def)             Requested size: 469.75449pt x 169.55373pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 283--283
+Underfull \hbox (badness 10000) in paragraph at lines 285--285
 [][]
  []
 
-<img/missingBoaz5minExample.png, id=155, 511.9125pt x 184.7703pt>
+<img/missingBoaz5minExample.png, id=156, 511.9125pt x 184.7703pt>
 File: img/missingBoaz5minExample.png Graphic file (type png)
 <use img/missingBoaz5minExample.png>
-Package pdftex.def Info: img/missingBoaz5minExample.png used on input line 287.
+Package pdftex.def Info: img/missingBoaz5minExample.png used on input line 289.
 
 (pdftex.def)             Requested size: 469.75449pt x 169.55373pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 287--287
+Underfull \hbox (badness 10000) in paragraph at lines 289--289
 [][]
  []
 
@@ -1045,32 +1045,32 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.307 
+l.309 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
 4}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.307 
+l.309 
        <./img/missingdayBoaz5min.png (PNG copy)> <./img/missingBoaz5minExample.
 png>] [5]
-Overfull \hbox (15.77501pt too wide) in alignment at lines 404--411
+Overfull \hbox (15.77501pt too wide) in alignment at lines 406--413
  [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (15.77501pt too wide) in alignment at lines 411--416
+Overfull \hbox (15.77501pt too wide) in alignment at lines 413--418
  [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (15.77501pt too wide) in alignment at lines 416--424
+Overfull \hbox (15.77501pt too wide) in alignment at lines 418--426
  [] [] [] [] [] [] 
  []
 
 
 Package natbib Warning: Citation `leaflet' on page 6 undefined on input line 43
-1.
+3.
 
 [6] (thesisReport.bbl [7]
 Underfull \hbox (badness 2503) in paragraph at lines 196--201
@@ -1088,18 +1088,18 @@ Underfull \hbox (badness 1688) in paragraph at lines 196--201
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 501.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 503.
 [9]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 501.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 503.
 (thesisReport.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 501.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 501.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 503.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 503.
 Package rerunfilecheck Info: File `thesisReport.out' has not changed.
 (rerunfilecheck)             Checksum: 34DB77537B1D5867255E05ABE68D8940;2062.
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 501.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 503.
  ) 
 Here is how much of TeX's memory you used:
  13088 strings out of 493323
@@ -1124,9 +1124,9 @@ Files/MiKTeX 2.9/fonts/type1/public/lm/lmri12.pfb><C:/Program Files/MiKTeX 2.9/
 fonts/type1/public/lm/lmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publi
 c/lm/lmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols
 /msbm10.pfb>
-Output written on thesisReport.pdf (9 pages, 3071186 bytes).
+Output written on thesisReport.pdf (9 pages, 3063386 bytes).
 PDF statistics:
- 356 PDF objects out of 1000 (max. 8388607)
+ 357 PDF objects out of 1000 (max. 8388607)
  65 named destinations out of 1000 (max. 500000)
  10365 words of extra memory for PDF output out of 12000 (max. 10000000)
 
