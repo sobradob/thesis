@@ -2,7 +2,7 @@
 # plz load packages and data first
 #
 
-rolmean<- rollify(mean,window = 3,na_value = F)
+rolmean<- rollify(mean,window = 3)
 
 home<- c(5.113919,52.10421)
 
@@ -50,6 +50,10 @@ library(grid)
 
 locShift<- grid.arrange(rMeanD,rMeanAcc,ncol=1)
 
+#square
+ggsave(locShift,filename = "../img/accuracyLocShiftSquare.png",device = "png",height = 6.5,width = 6.5, units = "cm")
+
+#long
 ggsave(locShift,filename = "../img/accuracyLocShift.png",device = "png",height = 6.5,width = 20, units = "cm")
 
 

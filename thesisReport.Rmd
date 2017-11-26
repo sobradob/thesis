@@ -54,14 +54,14 @@ Let a persons' true location on this two-dimensional plane be $G(t) = [G_x(t) G_
 
 ### Accuracy in location logs 
 
-In the example data set the distribution of $a$ is highly right skewed, with a median of 28, $\mu = 127$ and the maximum value at 26 km. @palmius_detecting_2017 note that in their Android based custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. We observe similar patterns in secondary logs. Figure 1 shows how accuracy can vary as a function of user behaviour, time and location. Most notably, accuracy tends to be lowest during movement. Stationary accuracy varies depending on phone battery level, wifi connection and user phone use. There are several recurring low-accuracy points, most likely cell-phone triangulation towers. 
+In the example data set the distribution of $a$ is highly right skewed, with a median of 28, $\mu = 127$ and the maximum value at 26 km. @palmius_detecting_2017 note that in their Android based custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. We observe similar patterns in secondary logs. Figure 1 shows how accuracy can vary as a function of user behaviour, time and location. Inaccurate measures are often followed by more accurate measures.  Most notably, low accuracy tends to be associated with movement (Figure 2). Stationary accuracy varies depending on phone battery level, wifi connection and user phone use. There are several recurring low-accuracy points, possibly the result of cell-phone tower triangulation. 
 
-```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement in a morning journey. The red circles denote the accuracy of all logged measurement points (the raw data). The points connected in time are connected by a line. The blue line shows the path without the most inaccurate (accuracy > 400 meters) points filtered out. The red line shows the path with all measurements included. ",out.width = '100%'}
+```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement on a morning journey. The red circles denote the accuracy of all logged measurement points (the raw data). The points connected in time are connected by a line. The blue line shows the path without the most inaccurate (accuracy > 400 meters) points filtered out. The red line shows the path with all measurements included. ",out.width = '100%'}
 include_graphics("img/journeyTillMiddayBoaz.png")
 ```
 
 
-```{r, accuracyPlot2, echo=FALSE, fig.cap="The accuracy of raw measures with time on the x-axis and accuracy on the y-axis. The colour scale shows the distance between the measurement and the previous point.",out.width = '100%'}
+```{r, accuracyPlot2, echo=FALSE, fig.cap="The upper chart shows the rolling mean distance from the next point in meters over the course of the day. The lower chart shows the rolling mean accuracy over the course of the day. In both cases, the rolling window is 3.",out.width = '100%'}
 include_graphics("img/accuracyLocShift.png")
 
 ```
