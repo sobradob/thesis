@@ -148,33 +148,8 @@ x<- bind_rows(day1,week1)
 ggplot(x, aes(x=unit, y=accuracy)) + geom_boxplot()
 
 
-# new scatterplot
-
-all %>%
-  select(time,lon,lat,accuracy) %>%
-  as_tbl_time(index = time) %>%
-  time_filter(2017-03-02 ~ 2017-03-02)%>%
-  mutate( time2 = lubridate::force_tz(time, "Asia/Singapore"),
-          distancePrev = c(0,
-                           sp::spDists(x=matrix(c(lon,lat),ncol = 2), segments = T)),
-          hour = as.POSIXct(
-            paste0("2014-01-22 ",
-                   strftime(time,format = "%H:%M", tz = "Europe/Budapest")))) %>%
-  ggplot( aes(x = hour, y=accuracy))+
-  geom_point()+theme_tufte()
-
 #wtf happened 2nd of march
 
-all %>%
-  select(time,lat,lon,accuracy) %>%
-  as_tbl_time(index = time) %>%
-  time_filter(2017-02-15 ~ 2017-02-17) %>%
-  filter(accuracy > 1000) %>% 
-  leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
-  addTiles() %>%
-  addCircles(lng = ~lon, lat = ~lat,
-             radius = ~accuracy, fillOpacity = 0.02,color = "#DF2935")%>%
-  addProviderTiles(providers$CartoDB.Positron)
 
 all %>%
   select(time,lat,lon,accuracy) %>%
