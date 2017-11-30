@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.11.3)  30 NOV 2017 21:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.11.3)  30 NOV 2017 22:09
 entering extended mode
 **./thesisReport.tex
 (thesisReport.tex
@@ -834,36 +834,56 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box32
 \@float@everytoks=\toks27
 \@floatcapt=\box33
-) (thesisReport.aux)
+) ("C:\Program Files\MiKTeX 2.9\tex\latex\amscls\amsthm.sty"
+Package: amsthm 2015/03/04 v2.20.2
+\thm@style=\toks28
+\thm@bodyfont=\toks29
+\thm@headfont=\toks30
+\thm@notefont=\toks31
+\thm@headpunct=\toks32
+\thm@preskip=\skip57
+\thm@postskip=\skip58
+\thm@headsep=\skip59
+\dth@everypar=\toks33
+)
+\c@theorem=\count126
+\c@lemma=\count127
+\c@definition=\count128
+\c@corollary=\count129
+\c@proposition=\count130
+\c@example=\count131
+\c@exercise=\count132
+(thesisReport.aux)
 \openout1 = `thesisReport.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 98.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 98.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 112.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 112.
+
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\ts1cmr.fd"
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 98.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 112.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\lm\t1lmr.fd"
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Info: Redefining \microtypecontext on input line 98.
+LaTeX Info: Redefining \microtypecontext on input line 112.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
@@ -912,34 +932,34 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box34
-Package hyperref Info: Link coloring OFF on input line 98.
+Package hyperref Info: Link coloring OFF on input line 112.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count126
+\c@section@level=\count133
 )
-LaTeX Info: Redefining \ref on input line 98.
-LaTeX Info: Redefining \pageref on input line 98.
-LaTeX Info: Redefining \nameref on input line 98.
+LaTeX Info: Redefining \ref on input line 112.
+LaTeX Info: Redefining \pageref on input line 112.
+LaTeX Info: Redefining \nameref on input line 112.
 (thesisReport.out) (thesisReport.out)
 \@outlinefile=\write3
 \openout3 = `thesisReport.out'.
 
 ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count127
+\scratchcounter=\count134
 \scratchdimen=\dimen141
 \scratchbox=\box35
-\nofMPsegments=\count128
-\nofMParguments=\count129
-\everyMPshowfont=\toks28
-\MPscratchCnt=\count130
+\nofMPsegments=\count135
+\nofMParguments=\count136
+\everyMPshowfont=\toks34
+\MPscratchCnt=\count137
 \MPscratchDim=\dimen142
-\MPnumerator=\count131
-\makeMPintoPDFobject=\count132
-\everyMPtoPDFconversion=\toks29
+\MPnumerator=\count138
+\makeMPintoPDFobject=\count139
+\everyMPtoPDFconversion=\toks35
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty"
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty"
@@ -951,79 +971,76 @@ Package grfext Info: Graphics extension search list:
 (grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
-) [1
-
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 232.
-
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 237.
-
+) (thesisReport.toc
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 3.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\lm\ot1lmr.fd"
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 237.
-
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 3.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\lm\omllmm.fd"
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 237
-.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 3.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\lm\omslmsy.fd"
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 237
-.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 3.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\lm\omxlmex.fd"
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 237.
+(Font)              <10> on input line 3.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 237.
+(Font)              <7> on input line 3.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 237.
-LaTeX Font Info:    Try loading font information for U+msa on input line 237.
+(Font)              <5> on input line 3.
+LaTeX Font Info:    Try loading font information for U+msa on input line 3.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\mt-msa.cfg"
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 237.
+LaTeX Font Info:    Try loading font information for U+msb on input line 3.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\mt-msb.cfg"
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) <img/journeyTillMiddayBoaz.png, id=121, 1096.84781pt x 462.22687pt>
+))
+\tf@toc=\write4
+\openout4 = `thesisReport.toc'.
+
+[1
+
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2] <img/journeyTillMidda
+yBoaz.png, id=115, 1096.84781pt x 462.22687pt>
 File: img/journeyTillMiddayBoaz.png Graphic file (type png)
 <use img/journeyTillMiddayBoaz.png>
-Package pdftex.def Info: img/journeyTillMiddayBoaz.png used on input line 250.
+Package pdftex.def Info: img/journeyTillMiddayBoaz.png used on input line 268.
 (pdftex.def)             Requested size: 469.74414pt x 197.95668pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 250--250
+Underfull \hbox (badness 10000) in paragraph at lines 268--268
 [][]
  []
 
-[2] <img/accuracyLocShift.png, id=135, 569.0058pt x 426.6339pt>
+<img/accuracyLocShift.png, id=116, 569.0058pt x 426.6339pt>
 File: img/accuracyLocShift.png Graphic file (type png)
 <use img/accuracyLocShift.png>
-Package pdftex.def Info: img/accuracyLocShift.png used on input line 254.
+Package pdftex.def Info: img/accuracyLocShift.png used on input line 272.
 (pdftex.def)             Requested size: 469.75682pt x 352.21815pt.
 [3pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.256 
+l.274 
        <./img/journeyTillMiddayBoaz.png (PNG copy)>] <img/missingdayBoaz5min.pn
-g, id=141, 511.9125pt x 184.7703pt>
+g, id=125, 511.9125pt x 184.7703pt>
 File: img/missingdayBoaz5min.png Graphic file (type png)
 <use img/missingdayBoaz5min.png>
-Package pdftex.def Info: img/missingdayBoaz5min.png used on input line 270.
+Package pdftex.def Info: img/missingdayBoaz5min.png used on input line 288.
 (pdftex.def)             Requested size: 469.75449pt x 169.55373pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 270--270
+Underfull \hbox (badness 10000) in paragraph at lines 288--288
 [][]
  []
 
@@ -1032,16 +1049,16 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.272 
-       <./img/accuracyLocShift.png>] <img/missingBoaz5minExample.png, id=148, 5
+l.290 
+       <./img/accuracyLocShift.png>] <img/missingBoaz5minExample.png, id=133, 5
 11.9125pt x 184.7703pt>
 File: img/missingBoaz5minExample.png Graphic file (type png)
 <use img/missingBoaz5minExample.png>
-Package pdftex.def Info: img/missingBoaz5minExample.png used on input line 274.
+Package pdftex.def Info: img/missingBoaz5minExample.png used on input line 292.
 
 (pdftex.def)             Requested size: 469.75449pt x 169.55373pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 274--274
+Underfull \hbox (badness 10000) in paragraph at lines 292--292
 [][]
  []
 
@@ -1050,60 +1067,47 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.303 
+l.321 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
 4}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.303 
+l.321 
        <./img/missingdayBoaz5min.png (PNG copy)> <./img/missingBoaz5minExample.
 png>] [6]
-Overfull \hbox (15.77501pt too wide) in alignment at lines 408--417
- [] [] [] [] [] [] 
+Overfull \hbox (27.77501pt too wide) in paragraph at lines 430--441
+ [][] 
  []
 
+[7pdfTeX warning (ext4): destination with the same identifier (name{table.1}) h
+as been already used, duplicate ignored
 
-Overfull \hbox (15.77501pt too wide) in alignment at lines 417--422
- [] [] [] [] [] [] 
- []
-
-
-Overfull \hbox (15.77501pt too wide) in alignment at lines 422--430
- [] [] [] [] [] [] 
- []
-
-[7] (thesisReport.bbl [8]
-Underfull \hbox (badness 2503) in paragraph at lines 196--201
-[]\T1/lmr/m/n/10 (+20) Adam Sadilek and John Krumm.  Far Out: Pre-dict-ing Long
--Term Hu-man Mo-bil-ity.  \T1/lmr/m/it/10 (+20) Mi-
- []
-
-
-Underfull \hbox (badness 1688) in paragraph at lines 196--201
-\T1/lmr/m/it/10 (+20) crosoft Re-search\T1/lmr/m/n/10 (+20) , De-cem-ber 2016. 
- URL []$https : / / www . microsoft . com / en-[]us / research / publication /
- []
-
-[9])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 505.
-[10]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 505.
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.496 
+      ] (thesisReport.bbl [8])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 516.
+[9]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 516.
 (thesisReport.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 505.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 505.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 516.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 516.
 Package rerunfilecheck Info: File `thesisReport.out' has not changed.
-(rerunfilecheck)             Checksum: B31B0B490756C1186BF25041482B8E39;1863.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 505.
+(rerunfilecheck)             Checksum: A91AD3E1DC31E9C5F4A266C8B3821E85;882.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 516.
  ) 
 Here is how much of TeX's memory you used:
- 13085 strings out of 493323
- 188493 string characters out of 3139043
- 300083 words of memory out of 3000000
- 16256 multiletter control sequences out of 15000+200000
- 52266 words of font info for 103 fonts, out of 3000000 for 9000
+ 13180 strings out of 493323
+ 189666 string characters out of 3139043
+ 298477 words of memory out of 3000000
+ 16356 multiletter control sequences out of 15000+200000
+ 51439 words of font info for 97 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,6n,38p,859b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 32i,7n,38p,859b,457s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Program Fil
 es/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program Files/MiKTeX 2.9/fon
 ts/enc/dvips/lm/lm-rm.enc}{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec
@@ -1117,9 +1121,9 @@ TeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
 .pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Program 
 Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy7.pfb><C:/Program Files/MiKTeX 2.9/f
 onts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on thesisReport.pdf (10 pages, 3070934 bytes).
+Output written on thesisReport.pdf (9 pages, 3061473 bytes).
 PDF statistics:
- 351 PDF objects out of 1000 (max. 8388607)
+ 302 PDF objects out of 1000 (max. 8388607)
  65 named destinations out of 1000 (max. 500000)
- 10357 words of extra memory for PDF output out of 12000 (max. 10000000)
+ 10309 words of extra memory for PDF output out of 12000 (max. 10000000)
 

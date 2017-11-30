@@ -5,13 +5,15 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 bibliography:
   - thesisGPS.bib
   - rReferences.bib
+biblio-style: apalike
+link-citations: yes
 output:
-  rmarkdown::pdf_document:
+  bookdown::pdf_book:
     citation_package: natbib
     fig_caption: yes        
     includes:  
       in_header: tp2.tex
-
+    
 ---
 
 ```{r setup, include=FALSE}
@@ -44,7 +46,7 @@ Noisy data can lead to inaccurate conclusions if it is not accounted for. Suppos
 
 In this paper we will explore in detail the problem of missing data and measurement error in secondary location logs. Moreover, we will  compare methods used to deal with these problems.
 
-# A concrete example
+## A concrete example
 
 There is little literature on dealing with missing data in custom or secondary logs. Thus it is worth illustrating the typical characteristics using an example data set. The example data set comes from the Google Location History of a single individual. It spans from January 2013 to January 2017 and contains  814 941  measurements.  The data set contains a multitude of variables, including inferred activity and velocity. We will focus on measurements of latitude, longitude, accuracy (defined below). All measurements are paired with a timestamp.
 
@@ -77,7 +79,7 @@ include_graphics("img/missingdayBoaz5min.png")
 include_graphics("img/missingBoaz5minExample.png")
 ```
 
-## Methods
+# Methods
 
 ## Two-dimensional projections and notation
 
