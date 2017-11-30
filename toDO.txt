@@ -27,3 +27,31 @@ Add more introduction, merge it with problem description, write very explicitly 
 Imagemagick fixed, perhaps create new plot explaining data types. 
 
 Added APA version, citations are broken
+
+
+Plots
+add lables to journey beginnings. See accuracy dist plot script
+
+Notation:
+Add information of other people?
+How to use individual dimension?
+
+They are all based on one individual.
+
+Other individuals and geographic environment. 
+Common routes, group behaviour. 
+
+Notation 
+
+can be extended to several individuals
+
+elk movementes in group?
+
+Explain why this data is useful for psychologists behavioural scientists.
+What sort of information can be extracted from GPS. 
+
+Add a lot of bias and error.
+
+Concrete example. 
+Include some sort of aggregation. Time spent at home and distance travelled.
+Palmius feature extraction.

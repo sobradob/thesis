@@ -2,6 +2,7 @@
 Data_Start<- as.POSIXct("2015-09-07 01:55:00")
 Data_End  <- as.POSIXct("2015-09-10 01:59:00")
 
+library(leaflet)
 exploreDates <- function(Data_Start= "2017-02-15", Data_End = "2017-02-17"){
   
   # helper function
@@ -35,7 +36,6 @@ exploreDates <- function(Data_Start= "2017-02-15", Data_End = "2017-02-17"){
     select(time,lat,lon,accuracy) %>%
     as_tbl_time(index = time) %>%
     time_filter(time_formula = time_formula) %>%
-    filter(accuracy > 1000) %>% 
     leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
     addTiles() %>%
     addCircles(lng = ~lon, lat = ~lat,
@@ -44,5 +44,7 @@ exploreDates <- function(Data_Start= "2017-02-15", Data_End = "2017-02-17"){
   
 }
 
-exploreDates("2014-10-27","2014-10-27")
+exploreDates("2017-02-15+20:55:00","2017-02-15+23:55:00")
 
++12:00:00
++18:00:00
