@@ -27,6 +27,7 @@ wordcount         : "X"
 bibliography:
   - thesisGPS.bib
   - rReferences.bib
+biblio-style: apalike
 
 figsintext        : no
 figurelist        : no
@@ -38,6 +39,7 @@ lang              : "english"
 class             : "man"
 output            : papaja::apa6_pdf
 citation_package: natbib
+
 ---
 
 ```{r load_packages, include = FALSE}

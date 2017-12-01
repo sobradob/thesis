@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.11.3)  25 NOV 2017 20:27
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.11.3)  30 NOV 2017 22:27
 entering extended mode
 **./thesisReportApa.tex
 (thesisReportApa.tex
@@ -1492,15 +1492,15 @@ Package pdftex.def Info: img/journeyTillMiddayBoaz.png used on input line 4.
 
 
  <./img/journeyTillMiddayBoaz.png (PNG copy)>] <img/accuracyLocShift.png, id=21
-1, 569.0058pt x 184.7703pt>
+1, 569.0058pt x 426.6339pt>
 File: img/accuracyLocShift.png Graphic file (type png)
 <use img/accuracyLocShift.png>
 Package pdftex.def Info: img/accuracyLocShift.png used on input line 11.
-(pdftex.def)             Requested size: 469.75502pt x 152.54167pt.
+(pdftex.def)             Requested size: 469.75502pt x 352.21815pt.
 [17
 
- <./img/accuracyLocShift.png (PNG copy)>] <img/missingBoaz5minExample.png, id=2
-17, 511.9125pt x 184.7703pt>
+ <./img/accuracyLocShift.png>] <img/missingBoaz5minExample.png, id=218, 511.912
+5pt x 184.7703pt>
 File: img/missingBoaz5minExample.png Graphic file (type png)
 <use img/missingBoaz5minExample.png>
 Package pdftex.def Info: img/missingBoaz5minExample.png used on input line 18.
@@ -1537,9 +1537,9 @@ KTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
 .pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Program 
 Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Program Files/MiKTeX 2.9/f
 onts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on thesisReportApa.pdf (18 pages, 2938929 bytes).
+Output written on thesisReportApa.pdf (18 pages, 2940172 bytes).
 PDF statistics:
- 285 PDF objects out of 1000 (max. 8388607)
+ 286 PDF objects out of 1000 (max. 8388607)
  73 named destinations out of 1000 (max. 500000)
  10884 words of extra memory for PDF output out of 12000 (max. 10000000)
 
