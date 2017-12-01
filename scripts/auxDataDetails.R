@@ -90,3 +90,9 @@ peter <- extractDescriptives(PATH = "../../data/peter/myLocationHistory.rds")
 allData<- bind_rows(boaz,sipke,peter)
 
 saveRDS(allData, "datadescriptives.rds")
+
+# modify it now
+
+d<- readRDS("../tempdata/datadescriptives.rds")
+d$span <- gsub(pattern = "From ",replacement = "",d$span)
+saveRDS(allData, "datadescriptives.rds")
