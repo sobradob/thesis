@@ -70,13 +70,13 @@ missingDay5min<- ggplot(m5min, aes(x = time_5_min_day, y=measurements, colour= m
   geom_point()+theme_tufte()+
   xlab("")+
   ylab("Measurements")+
-  ggtitle("Missingness in daily measurements over time")+
+  ggtitle("Missingness in daily measurements", subtitle = "2013-2017")+
   scale_colour_gradient2(low = "black", mid = "grey50",
                          high = muted("red"), midpoint = 144, space = "Lab",
                          na.value = "grey50", guide = "colourbar")+
-  labs(x = NULL, colour = "Missing \n5 minute\n segments")
+  labs(x = NULL, colour = "Missing \n5 minute\n segments")+xlab("Time")
 
-ggsave(missingDay5min,filename = "../img/missingdayBoaz5min.png",device = "png",height = 6.5, width = 18, units = "cm")
+ggsave(missingDay5min,filename = "../img/missingdayBoaz5min.png",device = "png",height = 10, width = 20, units = "cm")
 
 
 

@@ -28,14 +28,14 @@ exampleMiss<- m5minv2 %>%
   geom_point()+theme_tufte()+
   xlab("")+
   ylab("Measurements")+
-  ggtitle("Measurements per 5 minute window")+
+  ggtitle("Measurements per 5 minute window",subtitle = "February 15 2017")+
   scale_x_datetime(breaks = date_breaks("4 hour"),
                    minor_breaks=date_breaks("2 hour"),
                    labels=date_format("%H:%M:%S", tz = "Asia/Singapore"))+
   scale_colour_manual(values=c("black",muted("red")),labels=c("Not Missing", "Missing"))+
-  labs(x = NULL, colour = "")
+  labs(x = NULL, colour = "")+xlab("Time")
 
-ggsave(exampleMiss,filename = "../img/missingBoaz5minExample.png",device = "png",height = 6.5, width = 18, units = "cm")
+ggsave(exampleMiss,filename = "../img/missingBoaz5minExample.png",device = "png",height = 10, width = 20, units = "cm")
 
 # randomly select two days
 sample(x = c(13,14,15,16,17),1)#YEAR

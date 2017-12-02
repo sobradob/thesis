@@ -128,7 +128,8 @@
     \newcounter{author}
     Department of Methodology \& Statistics
     
-    Submitted as a research report.
+    Submitted as a research report conforming to APA manuscript guidelines
+    (6th edition).
 
                       Correspondence concerning this article should be addressed to Boaz Sobrado. E-mail: \href{mailto:boaz@boazsobrado.com}{\nolinkurl{boaz@boazsobrado.com}}
                 }
@@ -144,7 +145,7 @@ equipment. In this paper we present a model which leverages the
 periodicity of human mobility in order to impute missing data values.
 Moreover, we will assess the performance of the model relative to
 currently used methods, such as linear interpolation.}
-  \keywords{Missing data, Measurement Bias,GPS, Human Mobility \\
+  \keywords{Missing Data, Measurement Bias, GPS, Human Mobility \\
 
     \indent Word count: 2205
   }
@@ -299,7 +300,7 @@ found to be a reliable predictor of extraversion (G. M. Harari et al.,
 2016).
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{img/timeUse} \caption{Proportion of time spent at home in February 2017. We estimate this by calculating the mean lattitude and longitude for every 5 minute time period in the month. Missing values are filled in by the previous observed value. Behavioural trends are evident, the user spends more time at home on weekends than on weekdays. Moreover, the variance is greater on weekends, due to travel.}\label{fig:aggrePlot}
+\includegraphics[width=1\linewidth]{img/timeUse} \caption{Proportion of time spent at home in February 2017. We estimate this by calculating the mean lattitude and longitude for every 5 minute time period in the month. The user is coded as at home if within 250 meters of the home coordiantes. Missing values are filled in by the previous observed value. Behavioural trends are evident, the user spends more time at home on weekends than on weekdays. Moreover, the variance is greater on Saturday, due to travel.}\label{fig:aggrePlot}
 \end{figure}
 
 \subsubsection{Accuracy in location
@@ -326,7 +327,7 @@ tower triangulation.
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{img/accuracyLocShift} \caption{Measures of user activity and measurement accuracy on February 15th 2017.The upper chart shows the distance from the next measured point in meters over the course of the day. All journeys are marked with a red line. The first peak corresponds to the first journey from the user's home to a gym around 8am. The second, smaller peak before 10 reflects a journey from the gym to the nearby lecture theatre. Both journeys can be seen in Figure 1. All other journeys are not shown in Figure 1. The large jump between journey 5 and 6 is measurement error. The lower chart shows the accuracy over the course of the day. The figure shows that measurement inaccuracy is sometimes related to the movement of the individual.}\label{fig:accuracyPlot2}
+\includegraphics[width=1\linewidth]{img/accuracyLocShift} \caption{Measures of user activity and measurement accuracy on February 15th 2017.The upper chart shows the distance from the next measured point in meters over the course of the day. All journeys are labled at the top of the chart. The first peak corresponds to the first journey from the user's home to a gym around 8am. The second, smaller peak before 10 reflects a journey from the gym to the nearby lecture theatre. Both journeys can be seen in Figure 2. All other journeys are not shown in Figure 2. The large jump between journey 5 and 6 is measurement error. The lower chart shows the accuracy over the course of the day. The figure shows that measurement inaccuracy is sometimes related to the movement of the individual.}\label{fig:accuracyPlot2}
 \end{figure}
 
 \subsubsection{Missingness}\label{missingness}
@@ -347,7 +348,7 @@ hours of the night in this case.
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=1\linewidth]{img/missingBoaz5minExample} \caption{Example of missing data on February 15th 2017. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information. These points are filled with red and lie on the x-axis.}\label{fig:measurementsPerDay}
+\includegraphics[width=1\linewidth]{img/missingBoaz5minExample} \caption{Example of missing data on February 15th 2017. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information. These points are filled with red and lie on the x-axis. Missingness over long time periods is related to the type of device the user has.}\label{fig:measurementsPerDay}
 \end{figure}
 
 \section{Methods}\label{methods}

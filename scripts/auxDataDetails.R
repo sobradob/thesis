@@ -95,4 +95,4 @@ saveRDS(allData, "datadescriptives.rds")
 
 d<- readRDS("../tempdata/datadescriptives.rds")
 d$span <- gsub(pattern = "From ",replacement = "",d$span)
-saveRDS(allData, "datadescriptives.rds")
+saveRDS(d, "../tempdata/datadescriptives.rds")

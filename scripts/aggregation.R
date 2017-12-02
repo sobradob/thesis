@@ -1,7 +1,5 @@
 # aggregator
 
-library(ggthemes)
-
 x<- all %>%
   select(time,lon,lat,accuracy) %>%
   as_tbl_time(index = time) %>%
@@ -18,7 +16,6 @@ x<- all %>%
                                       pt = home,
                                       longlat = T))
   
-colnames(x)[1] <- "time"
 exploreDates(x,"2017-02-15","2017-02-15")
 # time spent at home
 
@@ -41,5 +38,5 @@ timeUse<- ggplot(athome,aes(x = day, y = atHome2))+
   geom_point()+theme_tufte()+xlab("Day of the week")+
   ylab("Proportion of time\nspent at home")+ggtitle("Time spent at home - February 2017")
 
-ggsave(timeUse,filename = "../img/timeUse.png",device = "png",height = 6.5,width = 20, units = "cm")
+ggsave(timeUse,filename = "../img/timeUse.png",device = "png",height = 10,width = 20, units = "cm")
   
