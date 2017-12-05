@@ -50,8 +50,19 @@ elk movementes in group?
 Explain why this data is useful for psychologists behavioural scientists.
 What sort of information can be extracted from GPS. 
 
-Add a lot of bias and error.
 
-Concrete example. 
-Include some sort of aggregation. Time spent at home and distance travelled.
-Palmius feature extraction.
+Format tables APASTYLE.
+
+Add uncertainty to the plot with percentage of data missing. 
+Explain arbitraryness of 250. Include more what you could do. 
+
+Add a line on aggregation on what has been done before. 
+
+Put figures in text (?)
+
+Page 10 Neural Networks. 
+
+Plot for day, distance travelled,
+filtered movements,
+shape the filter,
+colour missing data.

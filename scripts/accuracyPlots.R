@@ -17,6 +17,9 @@ all<-readRDS("../../data/boaz/myLocationHistory.rds")
 
 all$time<- lubridate::with_tz(all$time, "Europe/Budapest")# don't forget to run
 
+home<- c(5.113919,52.10421)
+
+
 # general variables
 time1_p1 <- strptime(paste("2017-02-15", "00:00:00"), "%Y-%m-%d %H:%M:%S")
 time2_p1 <- strptime(paste("2017-02-15", "24:00:00"), "%Y-%m-%d %H:%M:%S")
