@@ -198,8 +198,8 @@ the individual lives, how much time he or she spends at home and where
 Within behavioural sciences, researchers have used GPS data to
 investigate wideranging topics. For example, Zenk, Schulz, and
 Odoms-Young (2009) investigate the effects of the food environment on
-eating patterns. G. M. Harari et al. (2016) look at the movement
-correlates of personality, finding that extrovers individuals spend less
+eating patterns. Harari et al. (2016) look at the movement
+correlates of personality, finding that extroverted individuals spend less
 time at home than introverts. Wang, Harari, Hao, Zhou, and Campbell
 (2015) looks at how academic performance is affected by movement
 patterns. Palmius et al. (2017) use mobility patterns to predict bipolar
@@ -232,7 +232,7 @@ switching the device off. As a result, secondary logs often contain wide
 temporal gaps with no measurements. For instance, several research
 groups studying mental health report missing data rates between 30\% to
 50\% (Grünerbl et al., 2015; Palmius et al., 2017; Saeb et al., 2015).
-Other researchers report similar trends in different fields (e.g. G. M.
+Other researchers report similar trends in different fields (e.g.
 Harari et al., 2016; Jankowska, Schipperijn, \& Kerr, 2015).
 
 There is no golden standard for dealing with missing data in GPS logs
@@ -252,10 +252,10 @@ information through a variety of methods. Other than GPS measurements,
 Androids use less-accurate heuristics such as WiFi access points and
 cellphone triangulation. Different methods are used because of
 computational and battery constraints. GPS is the most energy consuming
-sensor on most smartphones (M. Y. Chen et al., 2006; LaMarca et al.,
+sensor on most smartphones (Chen et al., 2006; LaMarca et al.,
 2005). In professional GPS trackers less than 80\% of measurements fall
 within 10 meters of the true location. GPS measures are most inaccurate
-in dense urban locations and indoors (S. Duncan et al., 2013;
+in dense urban locations and indoors (Duncan et al., 2013;
 Schipperijn et al., 2014). Unfortunately for researchers, this is where
 people in the developed world spend most of their time.
 
@@ -300,9 +300,9 @@ how the aggregate measures are influenced by the noise in the
 measurements and the missingness. In the case of distance travelled,
 simply filtering out the most inaccurate measures leads to significantly
 lower estimates. This phenomenon is mapped out on Figure
-\ref{fig:accuracyPlot} . On the other hand, the time spent at home would
-be greatly influenced at times by the imputation method, as several days
-with long periods of missing data.
+\ref{fig:accuracyPlot} . On the other hand, the estimated time spent at
+home on any given day can depend greatly on the imputation method due to
+the extent of missing data.
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{img/aggPlot} \caption{Proportion of time spent at home  and distance travelled in February 2017. We estimate time spent at home by calculating the mean lattitude and longitude for every 5 minute time period in the month. The user is coded as at home if within 250 meters of the home coordiantes. One can see that several days have long periods with missing data. More accurate estimates can be reached by imputing the missing measurements. As for distance travelled, it is evident that although the behavioural trends remain the same, the absolute estimate of distance travelled varies depending on the filter.}\label{fig:aggrePlot}
@@ -430,7 +430,7 @@ In climate or geological research spatiotemporal imputation methods are
 often used. For instance, the CUTOFF method estimates missing values
 using the nearest observed neighbours (Feng, Nowak, O'Neill, \& Welsh,
 2014 ). The authors illustrate their example using rainfall data from
-gauging stations across Australia. Similarly, Z. Zhang et al. (2017) use
+gauging stations across Australia. Similarly, Zhang et al. (2017) use
 a variety of machine learning methods to impute missing values. The
 example provided relates to underground water data. Generally these
 models assume fixed measurement stations (such as rainfall gauging
@@ -576,7 +576,7 @@ for the same measure calculated on the full data. For simulation-based
 imputation approaches a mean value over 100 samples was taken.
 
 Each imputation method used each of the three filtering methods as an
-input. Thus in the end we end up with eight methods to evaluate, three
+input. Thus in the end we have seven methods to evaluate: three
 for each filtering method as well as four for each imputation method.
 
 \newpage

@@ -1,6 +1,9 @@
 # adding all R packages citations
 
-library(Ref)
-listOfPackages <- c("dplyr","ggplot2","base","ggthemes","sp1","sp2","pandoc","citr","rstudio")
+library(bibtex)
+listOfPackages <- c("dplyr","ggplot2","base",
+                    "ggthemes","sp","pandoc","citr",
+                    "rstudio","tidyr","leaflet","tibbletime",
+                    "padr","bibtex","gridExtra","scales","papaja","knitr","kableExtra")
 
-write.bib(listOfPackages, file='rReferences')
+write.bib(listOfPackages, file='../rReferences')

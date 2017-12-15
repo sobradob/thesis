@@ -1,0 +1,16 @@
+\begin{lltable}
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:datadetailsTable}Table with descriptives about the data sets used to build the imputation methods. Missing data stands for the proportion of missing 5 minute windows within days that were not missing entirely.}\\
+\toprule
+Log duration & Logged days & Observations & Missing
+days & Missing
+data & Mean Accuracy\\
+\midrule
+2013-02-06 to 2017-03-29 & 1,512.00 & 646,376.00 & 635.00 & 0.22 & 127.78\\
+2016-07-14 to 2017-05-10 & 300.00 & 158,382.00 & 3.00 & 0.41 & 1,394.60\\
+2014-01-22 to 2017-01-23 & 1,097.00 & 814,941.00 & 80.00 & 0.25 & 121.83\\
+\bottomrule
+\end{longtable}
+\end{lltable}
+\efloatseparator
+ 
