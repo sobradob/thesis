@@ -1,11 +1,27 @@
-library(leaflet)
+# Often used auxilliary functions & packages
 
-Data_Start<- as.POSIXct("2015-09-07 01:55:00")
-Data_End  <- as.POSIXct("2015-09-10 01:59:00")
+# packages
 
+library(dplyr)
+library(tibbletime)
+library(sp)
+
+# functions
+
+shift.vec <- function(vec, shift){
+  if (length(vec) <= abs(shift)){
+    rep(NA ,length(vec))
+  } else {
+    if (shift >= 0) {
+      c(rep(NA, shift), vec[1:(length(vec) - shift)]) }
+    else {
+      c(vec[(abs(shift) + 1):length(vec)], rep(NA, abs(shift)))
+    }
+  }
+}
 
 exploreDates <- function(df = all, Data_Start= "2017-02-15", Data_End = "2017-02-17"){
-    
+  
   library(leaflet)
   library(dplyr)
   library(tibbletime)
@@ -40,15 +56,10 @@ exploreDates <- function(df = all, Data_Start= "2017-02-15", Data_End = "2017-02
   df %>%
     select(time,lat,lon,accuracy) %>%
     as_tbl_time(index = time) %>%
-    time_filter(time_formula = time_formula) %>%
+    filter_time(time_formula = time_formula) %>%
     leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
     addTiles() %>%
     addCircles(lng = ~lon, lat = ~lat,
                radius = ~accuracy, fillOpacity = 0.02,color = "#DF2935")%>%
     addProviderTiles(providers$CartoDB.Positron)
 }
-
-exploreDates(all,"2017-02-01","2017-02-01")
-
-+12:00:00
-+18:00:00
