@@ -75,11 +75,23 @@ d.filt <- dF %>% thicken(by = "time","5 min",colname= "time_5min") %>%
   )
 
 #summerise and filter and plot and shit
-d.filt %>% 
+raw<- d.filt %>% 
   select(time_5min, lonF,latF)%>%
   distinct() %>%
   as_tbl_time(time_5min) %>% 
-  filter_time(~ "2017-02-15") %>% 
+  filter_time(~ "2017-02-15")
+
+d.f1<- downSamplingPalmius(d) %>%
+  as_tbl_time(time_5min) %>% 
+  filter_time(~ "2017-02-15")
+
+d.f1 %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addCircles(lng = ~lonF, lat = ~latF)%>%
+  addProviderTiles(providers$CartoDB.Positron)
+
+d.filt %>% 
   leaflet() %>%
   addTiles() %>%
   addCircles(lng = ~lonF, lat = ~latF)%>%
@@ -98,8 +110,28 @@ for(i in 1: nrow(test)){
   test[i,c("lat","lon")] <- latlon
 }
 
-test %>% 
+ 
 leaflet() %>%
   addTiles() %>%
   addCircles(lng = ~lon, lat = ~lat)%>%
   addProviderTiles(providers$CartoDB.Positron)
+
+filtered <- d.filt %>% as_tbl_time(time) %>% 
+  filter_time(~ "2017-02-15")
+
+raw <- dataExample %>% as_tbl_time(time) %>% 
+  filter_time(~ "2017-02-15")
+
+saveRDS(filtered,"filtered.rds")
+saveRDS(raw,"raw.rds")
+
+ 
+leaflet() %>%
+  addTiles() %>%
+  addCircles(lng = ~lonF, lat = ~latF, data = raw, color = "#18206F", group = "Raw")%>%
+  addCircles(lng = ~lon, lat = ~lat, data=filtered,color = "#DF2935",group = "Filtered")%>%
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLayersControl(
+    overlayGroups = c("Raw", "Filtered"),
+    options = layersControlOptions(collapsed = FALSE)
+  )

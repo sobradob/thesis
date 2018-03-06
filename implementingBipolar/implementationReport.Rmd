@@ -7,6 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(leaflet)
 ```
 
 ## Implementation of filtering algorithm
@@ -27,29 +29,50 @@ Remove all occurrences of Dˆdest from D′ end if
 until |Dˆsrc| ≥ 10 and |Dˆdest| < 10 end
 ◃ Data points with high d′ D. dt
 ```
-Based on that I implemented it and executed it in R. You can see the repository with all my code [here](). 
+Based on that I implemented it and executed it in R. You can see the repository with all my code [here](https://github.com/sobradob/thesis/tree/master/implementingBipolar). Check out the filtering algo and the downsampling algo. 
 
 ## Preliminary evaluation of filtering algorithm using default parameters
 
-As expected, the high speed between measurement is associated with high accuracy scores (that is, inaccurate measurements). Approximately x percent of measurements in all of 2017 were associated with such jumps.
+As expected, the high speed between measurement is associated with high accuracy scores (that is, inaccurate measurements). Approximately 1.5% percent of measurements in all of 2017 were associated with such jumps.
 
 What Nick does is exclude those points if they are often associated with big jumps (i.e. more than ten times).
 
-For my own data in 2017 there was only one location which was excluded (a total of x measurements), which means it is not a very effective filtering algorithm using the original parameters. Moreover, the points which are filtered depend on the length of the data which is taken into account.
+For my own data in 2017 there was only one location which was excluded (a total of 0.02% measurements), which means it is not a very effective filtering algorithm using the original parameters. Moreover, the points which are filtered depend on the length of the data which is taken into account.
 
 Further playing around with the parameters would be necessary to see what fits this data best.
+
+The difference may be in the quality of the devices recording. I'll check to see the 2015 logs, perhaps it would be more efficient then. 
 
 ## Down sampling method
 
 In addition to filtering Nick also downsamples the data to 5 minute windows. The way he does this is that if the standard deviation within a fixed one hour window (e.g. from 2am to 3am) is less than 10 meters he simply takes a mean for the hour. If it is more than that he takes a 5 minute median window and applies it to the epoch in question.
 
-## Results following
+## Results following filtering and downsampling
 
 The red dots are the raw data, the blue dots are the filtered data for that day of mine on Feb 22.
 
-```{}
+```{r mapped, echo = F}
+
+raw<- readRDS("raw.rds")
+filtered<- readRDS("filtered.rds")
+
+leaflet() %>%
+  addTiles() %>%
+  addCircles(lng = ~lonF, lat = ~latF, data = raw, color = "#18206F", group = "Raw")%>%
+  addCircles(lng = ~lon, lat = ~lat, data=filtered,color = "#DF2935",group = "Filtered")%>%
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLayersControl(
+    overlayGroups = c("Raw", "Filtered"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
 
 ```
 
 ## Missing data imputation
 
+Palmius uses several imputation algorithms to impute missing data. 
+
+```
+
+```

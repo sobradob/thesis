@@ -4,11 +4,12 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 #read data
-data<- readRDS("../data/boaz/myLocationHistory09012018.rds")
+data<- readRDS("../../data/boaz/myLocationHistory09012018.rds")
 
 # load auxiliary functions
-source("../thesis/scripts/auxFuns.R")
-#filter down to a day
+source("../../thesis/scripts/auxFuns.R")
+
+#filter down to a year
 
 dataExample <- select(data,time,lat,lon,accuracy) %>%
   arrange(time) %>% 
@@ -20,6 +21,7 @@ dataExample <- select(data,time,lat,lon,accuracy) %>%
           index = 1:length(lat)
 )
 
+readr::write_csv(dataExample,"balazs2017.csv")
 rm(data)
 
 d<- dataExample
