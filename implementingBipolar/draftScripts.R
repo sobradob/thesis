@@ -128,11 +128,13 @@ for(i in indxFirstMissing){
 }
 
 u2 <- utrecht %>% 
-filter(distEndHome < 500000)
+filter(distEndHome < 500000 & timestampMs < (1.489*10^9) & (impLat > 24 | is.na(impLat)))
 
 utrecht %>% 
   filter(!is.na(impLon)) %>%
   summary()
+
+saveRDS(u2,"imputedPalmius.rds")
 
 leaflet() %>%
   addTiles() %>%
@@ -143,3 +145,13 @@ leaflet() %>%
     overlayGroups = c("Downsampled", "Imputed"),
     options = layersControlOptions(collapsed = FALSE)
   )
+
+# to do:
+# add gitignore
+# push to git
+# debug benin 
+# finish document and send to Palmius & Lugtig
+# finish document for Barnett & Onella 
+# send to lugtig and Ian
+
+# look into neural netowrks. 

@@ -1,7 +1,6 @@
 ---
 title: "Reproducing Palmius’ filtering & imputation"
 author: "Boaz Sobrado"
-date: "2/7/2018"
 output: html_document
 ---
 
@@ -71,8 +70,24 @@ leaflet() %>%
 
 ## Missing data imputation
 
-Palmius uses several imputation algorithms to impute missing data. 
+Palmius uses several imputation algorithms to impute missing data. It took me more time than expected, but I've managed to implement them. You can see the exact scripts in the github. The results are below. A few key takeaways:
 
-```
+1. This type of simple imputation works, but is not infallable. It is only as powerful as the downsampling, which I see as a fragile step here. 
+2. There are still some bugs I have to work on. I was imputed as being in the Benin at one point (I've never been there), which is either because of time zone differences and mean based downsampling or because longitude and lattitude got mixed up somewhere.
+
+The map below shows the downsampled vs the imputed measurements for a period of time of my movement within the Netherlands. Interestingly, the averaging does seem to show the paths quite well. 
+
+```{r finalmap, echo = F}
+u2<- readRDS("imputedPalmius.rds")
+
+leaflet() %>%
+  addTiles() %>%
+  addCircles(lng = ~lonF, lat = ~latF, data = u2, color = "#18206F", group = "Downsampled")%>%
+  addCircles(lng = ~impLon, lat = ~impLat, data=u2,color = "#DF2935",group = "Imputed")%>%
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLayersControl(
+    overlayGroups = c("Downsampled", "Imputed"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
 
 ```
