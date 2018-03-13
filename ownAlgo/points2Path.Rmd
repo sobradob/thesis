@@ -1,0 +1,200 @@
+---
+title: "Paths to points"
+author: "Boaz Sobrado"
+date: "3/12/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(leaflet)
+library(tidyr)
+library(padr)
+
+data<- readRDS("/Users/boazsobrado/Desktop/Academic/Utrecht/year2/thesisFiles/data/boaz/myLocationHistory09012018.rds")
+
+home<- c(5.113919,52.10421)
+uithof <- c(5.1635562, 52.0853133)
+
+test <- data %>% mutate( distanceHome = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                                        home,
+                                                        longlat = T),
+                           timestampMs = as.numeric(time))%>%
+  filter(distanceHome < 300000) %>% 
+    select(time,lon,lat,accuracy, timestampMs,distanceHome) %>%
+  arrange(timestampMs) %>% mutate(
+  distanceU = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                    uithof,
+                                    longlat = T),
+  tNextH = case_when(
+    distanceHome < 200 ~ timestampMs,
+    TRUE ~ NA_real_),
+  tNextU = case_when(
+    distanceU < 200 ~ timestampMs,
+    TRUE ~ NA_real_),
+  tPrevH = case_when(
+    distanceHome < 200 ~ timestampMs,
+    TRUE ~ NA_real_),
+  tPrevU = case_when(
+    distanceU < 200 ~ timestampMs,
+    TRUE ~ NA_real_)
+  ) %>% 
+fill(tNextH,tNextU,.direction ="up") %>%
+  fill(tPrevH,tPrevU,.direction ="down") %>%
+  mutate(tNextHSec = as.numeric(tNextH - timestampMs),
+         tNextUSec = as.numeric(tNextU - timestampMs),
+         tPrevUSec = as.numeric(timestampMs - tPrevU),
+         tPrevHSec = as.numeric(timestampMs - tPrevH)
+         ) %>% thicken(by = "time","1 day")%>%
+  mutate( trip = case_when(
+    (tNextUSec < 60*60 & tPrevHSec < 60*60)~1,
+    (tPrevUSec < 60*60 & tNextHSec < 60*60)~2,
+    TRUE ~0
+  )) %>% 
+  filter(trip !=0) %>%
+  filter(accuracy < 16) %>% 
+  select(lon,lat,trip,time_day,time)
+
+```
+
+## Introduction
+
+As discussed, the next steps for my own method are:
+
+1) Extract clusters of highly dense points called endpoints (work, home, etc.)
+2) Extract paths between endpoints.
+3) Bin all points along paths and sort measurements into the points.
+
+This is a pre-requirement for training the neural networks. The following section is regarding steps 2 and 3.
+
+## Path extraction
+
+Assuming two endpoints have been located, the data contains a set of sequences where the individual was at endpoint A and then went to endpoint B with no endpoints in between. Moreover, it will also contain a set of paths which go from endpoint B to endpoint A. These points will be defined as the path between A and B. 
+
+As an example, see the map below. In the control panel code 1 denotes from Home to Uithof, the return is coded 2. The day 2 - 2012-02-06 is should not be included as it is a Utrecht - Albert Heijn trip and stems from the heuristic I have used so far to extract the two locations.
+
+```{r map}
+test %>%
+  mutate( trip2 = paste0(trip,' -',time_day)) %>% 
+  leaflet() %>% 
+  addTiles() %>%
+  addCircles(lng = ~lon, lat = ~lat,
+             radius = 30, fillOpacity = 0.02,color = "#18206F",label = ~time,group= ~as.factor(trip2)) %>% 
+  addLayersControl(
+    overlayGroups = ~as.factor(trip2),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```
+
+If I have a single path I can use [principle curves analysis](http://www.geocomputation.org/2007/1B-Algorithms_and_Architecture1/1B2.pdf) to generate the curve which fits the points. However, as you can see we have multiple paths. A potential alternative is to use [local principal curves](https://epub.ub.uni-muenchen.de/1701/1/paper_320.pdf) which can handle multiple paths. The problem is that the assumption made there is that all paths come from the same distribution. This is evidently wrong: some paths are less frequently travelled than others. 
+
+Hence, I need a way of extracting the multiple unique paths between two points. The difficulty is that they are irregularly sampled lines, which makes using clustering mechanisms like k-means inappropriate. A potential solution is to use dynamic time warping as it is a way to evaluate the path similarities of objects travelling at different speeds.
+
+```{r dtw}
+library(dtw)
+sample<- split(test[,1:2], f=list(test$trip,test$time_day), drop = T)
+#splitting it into a list of data frames based on day and type of trip
+distMatrix <- dist(sample, method="DTW") #create a distance matrix
+hc <- hclust(distMatrix, method="average") #hierarchical clustering
+plot(hc)
+
+```
+
+As you can see, dynamic time warping has done a good job at separating trips from home and trips to home. Nonetheless, given that we've made the assumption that the trip is the same, we are more interested in visually inspecting wether the paths it clustered together are indeed the ones that should be clustered together. To remove the difference from the algorithm, we switch the order of the trips from home in order that they become trips from the uithof.
+
+```{r dtw2}
+sample<- split(test[,1:3], f=list(test$trip,test$time_day), drop = T)
+
+for(i in 1:length(sample)){
+  if(sample[[i]][1,3] == 1){
+    sample[[i]] <- sample[[i]]%>% arrange(-row_number())  
+  }
+  sample[[i]] <- sample[[i]][,1:2]
+}
+
+distMatrix <- dist(sample, method="DTW") #create a distance matrix
+hc <- hclust(distMatrix, method="single") #hierarchical clustering
+plot(hc)
+```
+
+Here we get what we want, kind of. The algorithm has identified two bigger clusters, which are essentially lots of dots vs few dots. This worries me a bit, but for now I will ignore it. Then, it essentially identifies two larger clusters within the group of the many dots. These are the two paths we want (approximately). If we cut it at an arbitrary height *h*, and group them based on that we get a single path.
+
+```{r path}
+clust<- data.frame( code = cutree(hc, k = NULL, h = 0.2),
+            trip = names(cutree(hc, k = NULL, h = 0.2)))
+
+tripMat <- left_join( test %>%
+             mutate( trip = paste0(trip,'.',time_day)),
+           clust) %>% #merge the clusters with the data
+  filter( code ==1) %>% #filter to cluster 1
+  select(lon,lat) %>% 
+  as.matrix()
+
+library(LPCM)
+  lpc(tripMat, h = 0.03, scaled = T,control = lpc.control(iter = 1000)) %>% 
+  plot()
+
+```
+
+Now we have an object which is essentially a single line between the two points. Now it is easy to write a function which can take the line and just draw a point on the line every X meters away from an endpoint. 
+
+```{r filteredPath}
+
+x<- lpc(tripMat, h = 0.03, scaled = T,control = lpc.control(iter = 1000))
+  
+data <- unscale(x)[["LPC"]]
+
+spacePath <- function(data = x,start = home, end = uithof, space = 100){
+  i <- 1
+  points <- list()
+  distanceFromEnd <- raster::pointDistance(data[1,], end, longlat = T)
+  
+  while(distanceFromEnd > space){
+    distance <-  raster::pointDistance(data, start, longlat = T)
+    indx <- which(distance/space>=1)[1]
+    if(is.na(indx)){break}
+    points[[i]] <- data[indx,]
+    distanceFromEnd <- raster::pointDistance(data[indx,], end, longlat = T)
+    start <- data[indx,]
+    data <- data[indx:nrow(data),]
+    i <-  i+1
+  }
+  points<- matrix(unlist(points),ncol = 2, byrow = T)
+  return(points)
+}
+
+spaced<- spacePath(data = data, start = home, end = uithof, space = 100)
+plot(spaced)
+
+```
+
+
+Creating binned points is not enough, every measured point has to be classified in one of the binned points. The way I can do this is as follows:
+
+```{r binFin}
+dists<- raster::pointDistance(tripMat,spaced,longlat = T)
+trip<- data.frame(tripMat, index = apply(dists,MARGIN = 1, FUN = which.min))
+spaced <- data.frame(spaced, index = 1:nrow(spaced))
+trip<- left_join(trip,spaced)
+
+library(ggplot2)
+ggplot(trip, aes(x=lon, y=lat, color=factor(index))) +
+  geom_point(shape=1,alpha = 0.2) +
+  geom_point(data = spaced, aes( x = X1, y= X2)) +theme_bw()
+
+```
+
+## Concerns and things to take into account:
+
+1. The parameters of the path clustering function.
+2. The parameters of the line drawing function.
+3. The parameter of the spacing function.
+4. Computational difficulties in running this for all routes. 
+
+## What is left to do
+
+1. Create binned points for all routes.
+2. Merge binned points if they overlap.
+3. Bin all measured points on the route into these binned points.
+4. Train the RNN.
