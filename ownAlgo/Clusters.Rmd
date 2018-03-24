@@ -1,0 +1,190 @@
+---
+title: "Finding Endpoints"
+author: "Boaz Sobrado"
+date: "3/13/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(leaflet)
+test2 <- readRDS("clusters.rds")
+data2 <- readRDS("data2.rds")
+```
+
+## Clusters
+
+Endpoints are defined as locations where an individual spends at least an X amount of time within a radius r. It is assumed that an individual will often (but not always) visit an endpoint several times. An endpoint can be home, work, a bus or train station, a bar etc.
+
+Palmius extracts endpoints by looking at the speed between measurements. This requires downsampling and does not take into account data drift and the fact that people tend to visit the same locations several times.Barnett does so by looking at the time that an individual spends within a radius. Then, once all endpoints are extracted endpoints close to each other are merged into a single endpoint.
+
+There are abundant other endpoint extraction methods in the literature. Such as  [Fu et al.](http://www.mdpi.com/2220-9964/5/10/166) and  [Chen et al](http://adsabs.harvard.edu/abs/2014ISPAr.XL2...55C).
+
+I will not dwell on those but rather use a rather simple model for now. In the future, it might be worth using other methods.
+
+First, let us take the data and extract only the bits within the Netherlands, then we'll take the pauses. Pauses are defined as a measurement where the next measurement and the previous measurement is within X amount of seconds (so it is not missing) as well as 
+
+```{r dataExtract, eval=F}
+# not actually run in the RMD 
+home<- c(5.113919,52.10421)
+test <- data %>% mutate( distanceHome = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                                              home,
+                                                              longlat = T),
+                         timestampMs = as.numeric(time))%>%
+  filter(distanceHome < 300000) %>% 
+  select(time,lon,lat,accuracy, timestampMs,distanceHome) %>%
+  arrange(timestampMs) %>% 
+
+rm(data)
+
+timeLim <- 600 # time limit between measurements in s
+distLim <- 100 # distance limit in m 
+minPause <- 60 # minimum pause length in s
+
+test2 <- test %>% filter(accuracy <25) %>% # get high accuracy measurements only 
+  mutate( prevLon = lag(lon),
+                   prevLat = lag(lat),
+                   nextLon = lead(lon),
+                   nextLat = lead(lat),
+                   nextDist = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                                    matrix(c(nextLon,nextLat),ncol = 2),
+                                                    longlat = T),
+                   prevDist = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                                    matrix(c(prevLon,prevLat),ncol = 2),
+                                                    longlat = T),
+                   nextMeas = as.numeric(timestampMs-lead(timestampMs)),
+                   prevMeas = as.numeric(lag(timestampMs)-timestampMs),
+                   isPause = case_when(prevMeas <= timeLim &nextMeas <= timeLim & nextDist <= distLim~1,
+                                       TRUE ~0)
+) %>%
+  group_by(run = {run = rle(isPause); rep(seq_along(run$lengths), run$lengths)}) %>%
+  summarize(isPause = mean(isPause),
+            lon = mean(lon),
+            lat = mean(lat),
+            t0  = min(timestampMs),
+            t1  = max(timestampMs),
+            duration = t1-t0)
+
+#perhaps take weighted mean in the future to reduce error
+
+```
+
+Here we get the continuous pauses grouped together, as well as the length of each pause in seconds. See below for points filtered where the duration is more than 10 minutes.
+
+```{r mapres}
+test2 %>% filter( isPause == 1 & duration > 600) %>% 
+  leaflet() %>% 
+  addTiles() %>%
+  addCircles(lng = ~lon, lat = ~lat,
+             radius = 30, fillOpacity = 0.02,color = "#18206F",label = ~as.character(duration))
+```
+
+However, many pauses are next to each other. In order to segment them I use the following code:
+
+```{r segment}
+toClust <- test2 %>% filter( isPause == 1 & duration > 600) %>%
+  select(lon,lat) %>% as.matrix()
+  
+library(sp)
+library(rgdal)
+library(geosphere)
+
+# convert data to a SpatialPointsDataFrame object
+xy <- SpatialPointsDataFrame(
+  toClust, data.frame(ID=seq(1:nrow(toClust))),
+  proj4string=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"))
+
+# use the distm function to generate a geodesic distance matrix in meters
+mdist <- distm(xy)
+
+# cluster all points using a hierarchical clustering approach
+hc <- hclust(as.dist(mdist), method="complete")
+
+# define the distance threshold, in this case 200 m
+d=200
+
+# define clusters based on a tree "height" cutoff "d" and add them to the SpDataFrame
+xy$clust <- cutree(hc, h=d)
+
+xy <- cbind(xy@data,xy@coords)
+
+xy %>% as.data.frame() %>% 
+  group_by(clust) %>% 
+  summarise(lon = mean(lon),
+            lat = mean(lat),
+            n   = n()) %>% 
+  leaflet() %>% 
+  addTiles() %>%
+  addCircles(lng = ~lon, lat = ~lat,
+             radius = 50, fillOpacity = 0.02,color = "#18206F",label = ~as.character(n))
+
+clustMap <- xy %>% as.data.frame() %>% 
+  group_by(clust) %>% 
+  summarise(lon = mean(lon),
+            lat = mean(lat),
+            n   = n())
+
+
+```
+
+As far as I can tell this does a pretty good job. The next steps are the following:
+1. Assign each measured point to the nearest cluster
+2. Check whether the nearest point is within the measured accuracy.
+3. Check whether the measured point is within a "pause".
+
+As a result we will be able to extract the nearest travelled paths. 
+
+```{r cs, eval = F}
+data <- test
+distance <-  raster::pointDistance(data[,2:3], clustMap[,2:3], longlat = T)
+clust<- apply(distance,MARGIN = 1, FUN = which.min)
+data$distClustMin<- apply(distance,MARGIN = 1, FUN = min)
+data$clust <- clust
+
+data2<- data %>%
+  arrange(timestampMs) %>% mutate(
+  withinAcc = case_when(accuracy >= distClustMin ~1,
+                        TRUE ~ 0),
+  prevLon = lag(lon),
+  prevLat = lag(lat),
+  nextLon = lead(lon),
+  nextLat = lead(lat),
+  nextDist = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                   matrix(c(nextLon,nextLat),ncol = 2),
+                                   longlat = T),
+  prevDist = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                   matrix(c(prevLon,prevLat),ncol = 2),
+                                   longlat = T),
+  nextMeas = as.numeric(timestampMs-lead(timestampMs)),
+  prevMeas = as.numeric(lag(timestampMs)-timestampMs),
+  isPause = case_when(prevMeas <= timeLim &nextMeas <= timeLim & nextDist <= distLim~1,
+                      TRUE ~0),
+  pauseClust = case_when(isPause == 1 & withinAcc == 1~ as.numeric(clust),
+                         TRUE ~NA_real_),
+  nextPauseClust = pauseClust,
+  prevPausClust = pauseClust
+) %>% 
+  fill(nextPauseClust,.direction ="up") %>%
+  fill(prevPausClust,.direction ="down")
+```
+
+Then we can map out the most common paths between two endpoints.
+
+```{r pathBetweenCluster}
+checkPath <- function( data2 = data, start = 14, end = 3){
+  data2 %>%
+    filter(nextPauseClust == end & prevPausClust == start) %>% 
+    leaflet() %>% 
+    addTiles() %>% 
+    addCircles(lng = ~lon, lat = ~lat, fillOpacity = 0.02,color = "#18206F",label = ~as.character(clust)) %>% 
+    addCircles(data = filter(clustMap, clust ==end),lng = ~lon, lat = ~lat, color = "red", radius = 100) %>% 
+    addCircles(data = filter(clustMap, clust ==start),lng = ~lon, lat = ~lat, color = "green", radius = 100)
+}
+
+checkPath(data2, start = 144, end = 3)
+checkPath(data2, start = 48, end = 36)
+checkPath(data2, start = 55, end = 139)
+```
+
+Here you can see a cross section of paths and issues. Some are just sparse, some have a lot of noise, and some have other issues (e.g. underground signal loss).

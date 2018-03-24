@@ -198,3 +198,7 @@ ggplot(trip, aes(x=lon, y=lat, color=factor(index))) +
 2. Merge binned points if they overlap.
 3. Bin all measured points on the route into these binned points.
 4. Train the RNN.
+
+## Further interest:
+Partitioning overlapping trajectories into [sub-trajectories](http://hanj.cs.illinois.edu/pdf/sigmod07_jglee.pdf).
+Similarly, a more principled approach into dividing the trajectory into characteristic points 

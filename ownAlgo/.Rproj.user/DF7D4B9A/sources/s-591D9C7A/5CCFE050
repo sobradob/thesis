@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1521879700348.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "959327298",
+    "id" : "5CCFE050",
+    "lastKnownWriteTime" : 1521709180,
+    "last_content_update" : 1521709180,
+    "path" : "~/Desktop/Academic/Utrecht/year2/thesisFiles/thesis/ownAlgo/cluster2points.R",
+    "project_path" : "cluster2points.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

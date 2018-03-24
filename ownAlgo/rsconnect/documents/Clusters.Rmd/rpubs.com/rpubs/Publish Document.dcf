@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/369698/c936bf698dee4ad6a2078d4b210d58ab
+bundleId: https://api.rpubs.com/api/v1/document/369698/c936bf698dee4ad6a2078d4b210d58ab
+url: http://rpubs.com/sobradob/369698
+when: 1521298535.79204
