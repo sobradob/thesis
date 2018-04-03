@@ -4,14 +4,13 @@
 library(keras)
 library(tibbletime)
 library(dplyr)
-
+data2 <- fin
 data2<- readRDS('nnData.rds')
 # reshape
-lubridate::period_to_seconds(lubridate::hms(strftime(time,"%T"))) 
 seconds_in_day <-  24*60*60
 
 # prepare NL data for ML
-d <- data2 %>%filter(isPause == 1) %>%
+d <- data2 %>%
   mutate( day  = strftime(time,"%u"),
           month = strftime(time,"%m"),
           secMidnight = lubridate::period_to_seconds(lubridate::hms(strftime(time,"%T"))),
@@ -46,31 +45,32 @@ test <- d %>% as_tbl_time(time)%>%
   filter_time((~ "2017-03-16"))
 
 # alternative end
+nClust<- (length(unique(fin$clust))+1)
 
 x_train <- cbind(train[,c(5,6,8,9)],
                  to_categorical(train$day, num_classes = 8),
                  to_categorical(train$month, num_classes = 13),
-                 to_categorical(train$lagClust,num_classes = 160),
-                 to_categorical(train$leadClust, num_classes = 160)) %>% as.matrix()
+                 to_categorical(train$lagClust,num_classes = nClust),
+                 to_categorical(train$leadClust, num_classes = nClust)) %>% as.matrix()
 
 x_test <- cbind(test[,c(5,6,8,9)],
                  to_categorical(test$day, num_classes = 8),
                  to_categorical(test$month, num_classes = 13),
-                 to_categorical(test$lagClust,num_classes = 160),
-                 to_categorical(test$leadClust, num_classes = 160)) %>% as.matrix()
+                 to_categorical(test$lagClust,num_classes = nClust),
+                 to_categorical(test$leadClust, num_classes = nClust)) %>% as.matrix()
 
 
-y_train <- to_categorical(train$clust, num_classes = 160)
-y_test <- to_categorical(test$clust, num_classes = 160)
+y_train <- to_categorical(train$clust, num_classes = nClust)
+y_test <- to_categorical(test$clust, num_classes = nClust)
 
 
 model <- keras_model_sequential() 
 model %>% 
-  layer_dense(units = 200, activation = 'relu', input_shape = c(345)) %>%
+  layer_dense(units = 200, activation = 'relu', input_shape = ncol(x_test)) %>%
   layer_dropout(rate = 0.4) %>%
   layer_dense(units = 120, activation = 'relu') %>%
   layer_dropout(rate = 0.3) %>%
-  layer_dense(units = 160, activation = 'softmax')
+  layer_dense(units = nClust, activation = 'softmax')
 
 summary(model)
 
@@ -101,13 +101,11 @@ library(leaflet)
 
 leaflet() %>% 
   addTiles() %>% 
-  addCircles(data = left_join(t,clustMap, by = "clust"),lng = ~lon, lat = ~lat, color = "red", radius = 10,
+  addCircles(data = left_join(t,allPoints, by = "clust"),lng = ~lon, lat = ~lat, color = "red", radius = 10,
              label = ~as.character(clust)) %>% 
-  addCircles(data = left_join(t,clustMap, by = c("predC" = "clust")),lng = ~lon, lat = ~lat, color = "green", radius = 10,label = ~as.character(predC))
+  addCircles(data = left_join(t,allPoints, by = c("predC" = "clust")),lng = ~lon, lat = ~lat, color = "green", radius = 10,label = ~as.character(predC))
   
 
-left_join(t,clustMap, by = "clust")
-left_join(t,clustMap, by = c("predC" = "clust"))
 t %>% select(time, clust,predC) %>% View()
 
 # identify & extract missings

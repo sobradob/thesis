@@ -1,0 +1,40 @@
+# takes raw measurements as input and assigns each to the closest cluster, as well as specifying wether it is wthin accuracy
+
+binMeasurements <- function(data,clustMap, timeLim = 200, distLim = 100,minPause = 120, accuracyLim = 50){
+  library(dbplyr)
+  library(tidyr)
+  #calculate distances between clusters and the data, then establish which one is closest
+  distance <-  raster::pointDistance(data[,2:3], clustMap[,2:3], longlat = T)
+  clust<- apply(distance,MARGIN = 1, FUN = which.min)
+  data$distClustMin<- apply(distance,MARGIN = 1, FUN = min)
+  data$clust <- clust
+  
+  #calculate wether it is within accuracy
+  # add other metrics
+  data2<- data %>%
+    arrange(timestampMs) %>% mutate(
+      withinAcc = case_when(accuracy >= distClustMin ~1,
+                            TRUE ~ 0),
+      prevLon = lag(lon),
+      prevLat = lag(lat),
+      nextLon = lead(lon),
+      nextLat = lead(lat),
+      nextDist = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                       matrix(c(nextLon,nextLat),ncol = 2),
+                                       longlat = T),
+      prevDist = raster::pointDistance(matrix(c(lon,lat),ncol = 2),
+                                       matrix(c(prevLon,prevLat),ncol = 2),
+                                       longlat = T),
+      nextMeas = as.numeric(lead(timestampMs)-timestampMs),
+      prevMeas = as.numeric(timestampMs-lag(timestampMs)),
+      isPause = case_when(prevMeas <= timeLim &nextMeas <= timeLim & nextDist <= distLim~1,
+                          TRUE ~0),
+      pauseClust = case_when(isPause == 1 & withinAcc == 1~ as.numeric(clust),
+                             TRUE ~NA_real_),
+      nextPauseClust = pauseClust,
+      prevPausClust = pauseClust
+    ) %>% 
+    fill(nextPauseClust,.direction ="up") %>%
+    fill(prevPausClust,.direction ="down")
+  return(data2)
+}

@@ -2,8 +2,9 @@
 
 #load required packages
 library(dplyr)
-
+library(leaflet)
 #read the data in
+Sys.time()
 data<- readRDS("/Users/boazsobrado/Desktop/Academic/Utrecht/year2/thesisFiles/data/boaz/myLocationHistory09012018.rds")
 
 home<- c(5.113919,52.10421)
@@ -21,9 +22,9 @@ rm(data)
 # analyse time spent in one area
 
 test2 <- clusterFunc(data = test,
-                     timeLim = 300,
+                     timeLim = 200,
                      distLim = 100,
-                     minPause = 60,
+                     minPause = 120,
                      accuracyLim = 50)
 
 # Extract the pause locations
@@ -33,3 +34,65 @@ toClust <- test2 %>% filter( isPause == 1 & duration >= 300) %>%
 
 # merge all clusters within 400 meters of each other  
 clusterMap <- mergePoints(toClust, d = 400)
+
+# all measurements binned into a pause cluster
+test3<- binMeasurements(test,clusterMap)
+
+# compute additional features
+test3 <- featureFunc(test3,timeLim = 200, distLim = 100, minPause = 120, accuracyLim = 50)
+
+routeMap <- test3 %>% mutate(timeDay = as.Date(time)) %>% 
+  group_by(nextPauseClust,prevPausClust) %>% 
+  dplyr::summarise(n = n(),
+            nDats = n_distinct(timeDay)) %>% 
+  filter( (nextPauseClust != prevPausClust)) %>% 
+  arrange(desc(n))
+
+checkPath(test3, start = 33, end = 32,clusterMap)
+
+#clusterPaths
+routePoints<- extractAllPaths(test3,routeMap)
+
+# cluster path clusters
+
+routePoints <- mergePoints( routePoints %>% select(lon,lat), d = 50)
+
+
+allPoints <- routePoints %>%
+  mutate(clust = clust + max(clusterMap$clust),
+         type = 0) %>% 
+  rbind( clusterMap %>% mutate(type = 1)) %>% 
+  arrange(clust)%>%
+  select(lon,lat,type) %>% 
+  mergePoints2(d = 100)
+
+# split up code to make it more interpretable
+# merge pauses
+pause <-   test3 %>% filter(isPause == 1) %>% 
+  binMeasurements(.,allPoints %>% filter(type == 1))
+# merge non-pauses
+
+notpause <-  test3 %>% filter(isPause == 0) %>% 
+  binMeasurements(.,allPoints)
+
+fin<- rbind(pause, notpause) %>% arrange(timestampMs)
+
+
+Sys.time()
+# check out top clusters classified
+top100<- fin %>% select(clust) %>%group_by(clust) %>%  tally() %>% arrange(desc(n)) %>% top_n(25) %>% pull(clust)
+
+pal <- colorFactor(c("navy", "red"), domain = c(0, 1))
+
+allPoints %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addCircleMarkers(lng =~lon, lat = ~lat, color = ~pal(type),radius = ~ifelse(type == 0, 6, 10))
+  addCircleMarkers()
+
+  library(leaflet.extras)
+  routePoints%>% 
+    leaflet() %>% 
+    addTiles() %>%
+    addHeatmap(lng = ~lon, lat = ~lat, intensity = ~visits)
+  

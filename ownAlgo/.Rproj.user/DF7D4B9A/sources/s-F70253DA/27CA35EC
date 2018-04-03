@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1522652750935.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2557940019",
+    "id" : "27CA35EC",
+    "lastKnownWriteTime" : 1522585711,
+    "last_content_update" : 1522652753641,
+    "path" : "~/Desktop/Academic/Utrecht/year2/thesisFiles/thesis/ownAlgo/extractMissing.R",
+    "project_path" : "extractMissing.R",
+    "properties" : {
+        "cursorPosition" : "21,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

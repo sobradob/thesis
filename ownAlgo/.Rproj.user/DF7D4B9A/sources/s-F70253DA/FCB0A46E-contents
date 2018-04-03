@@ -1,0 +1,174 @@
+---
+title: 'Handling missing data in smartphone location logs'
+author: "Boaz Sobrado"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+bibliography:
+  - thesisGPS.bib
+  - rReferences.bib
+biblio-style: apalike
+link-citations: yes
+output:
+  bookdown::pdf_book:
+    citation_package: natbib
+    fig_caption: yes        
+    includes:  
+      in_header: tp2.tex
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+library(ggthemes)
+library(ggplot2)
+library(knitr)
+```
+
+# Abstract
+*Using objective location data to infer the mobility measures of individuals is highly desirable, but methodologically difficult. Using commercially gathered location logs from smartphones holds great promise, as they have already been gathered, often span years and can be associated to individuals. However, due to technical constraints this data is more sparse and inaccurate than that produced by specialised equipment. In this paper we present a model which leverages the periodicity of human mobility in order to impute missing data values. Moreover, we will assess the performance of the model relative to currently used methods, such as linear interpolation.*
+
+# Introduction
+
+How people move about in their environment affects a wide range of outcomes, such as  health, income and social capital [@goodchild_toward_2010]. A better understanding of mobility could lead to better health and urban-planning policies. Yet a large part of studies on human mobility are conducted with pen-and-paper travel diaries, despite well known methodological flaws. The high cost and burden to respondents limits the span of data collection. Short trips are frequently under-reported  [@wolf_impact_2003] . The self-reported duration of commutes is often underestimated [@delclos-alio_keeping_2017]. 
+
+These obstacles can be overcome by using objective data on human mobility. Such data  can now be obtained using the Global Positioning System (GPS). GPS uses the distance between a device and several satellites to determine location. GPS measurements can be used to infer a vast range of socioeconomic and behavioural measures, including where the individual lives, how much time he or she spends at home and where (and how) they travel.
+
+Within behavioural sciences, researchers have used GPS data to investigate wideranging topics. For example,  @zenk_how_2009 investigate the effects of the food environment on eating patterns. @harari_using_2016 look at the movement correlates of personality, finding that extrovers individuals spend less time at home than introverts.  @wang_smartgpa:_2015  looks at how academic performance is affected by movement patterns.  @palmius_detecting_2017 use mobility patterns to predict bipolar depression.
+
+In most studies participants receive a specialised GPS devices to track their movement. We call resulting logs *specialised logs*. @barnett_inferring_2016 point out several methodological issues with these studies. Like studies using pen-and-paper travel diaries, collecting specialised logs is costly and places a high burden on participants. Besides, introducing a new device to the participant's life may bias their behaviour. Due to these drawbacks specialised logs usually span a short amount of time. @barnett_inferring_2016 advocate installing a custom-made tracking app on user's phones (*custom logs*). Another solution is to take advantage of existing smartphone location logs  (*secondary logs*) . For instance,  Google Location History contains information on millions of users [@location_history_timeline_2017]. Often, secondary logs span several years. By law, secondary logs are accessible to users for free [@commission_protecting_2017]. Yet, secondary logs also present methodological challenges. They were created for non-academic purposes under engineering constraints (detailed subsequently). These constraints mean that sensors do not track users continuously, meaning that the resulting logs can be sparse and inaccurate. Hence, two important challenges are dealing with measurement noise and missing data.
+
+Missing data is a pervasive issue as it can arise due to several reasons. Technical reasons include signal loss, battery failure and device failure. Behavioural reasons include leaving the phone at home or switching the device off. As a result, secondary logs often contain wide temporal gaps with no measurements. For instance, several research groups studying mental health report missing data rates between 30% to 50% [@saeb_mobile_2015;@grunerbl_smartphone-based_2015;@palmius_detecting_2017]. Other researchers report similar trends in different fields [e.g. @harari_using_2016;@jankowska_framework_2015].
+
+There is no golden standard for dealing with missing data in GPS logs [@barnett_inferring_2016]. Importantly, spatiotemporal data measurements are often correlated in time and space. This means that common methods, such as mean imputation, are unsuitable.  For example, imagine an individual who splits almost all her time between work and home. Suppose she spends a small amount of time commuting between the two along a circular path. Using mean imputation to estimate her missing coordinates, we impute her to be at the midpoint between home and work.  She has never and will never be there! Worryingly, there is little transparency on how researchers deal with missing data [ @jankowska_framework_2015].
+
+The accuracy of smartphone location measurements is substantially lower than that of professional GPS trackers. Android phones collect location information through a variety of methods. Other than GPS measurements, Androids use less-accurate heuristics such as WiFi access points and cellphone triangulation. Different methods are used because of computational and battery constraints. GPS is the most energy consuming sensor on most smartphones [@lamarca_place_2005; @chen_practical_2006]. In professional GPS trackers less than 80% of measurements fall within 10 meters of the true location. GPS measures are most inaccurate in dense urban locations and indoors [@schipperijn_dynamic_2014;@duncan_portable_2013]. Unfortunately for researchers, this is where people in the developed world spend most of their time.
+
+Noisy data can lead to inaccurate conclusions if it is not accounted for. Suppose we wish to calculate an individual's movement in a day. A simple approach would be to calculate the sum of the distance between each measurement. But if there is noise, the coordinates will vary even though the individual is not moving. If the measurements are frequent and noisy, we will calculate a lot of movement, even if the individual did not move at all! This issue is also visualised in Figure 1. The problem is further complicated because missing data and noisy measurements are related. Methods used by researchers to reduce noise, such as throwing out inaccurate measurements [e.g. @palmius_detecting_2017],  can exacerbate the severity of the missing data problem.
+
+In this paper we will explore in detail the problem of missing data and measurement error in secondary location logs. Moreover, we will  compare methods used to deal with these problems.
+
+## A concrete example
+
+There is little literature on dealing with missing data in custom or secondary logs. Thus it is worth illustrating the typical characteristics using an example data set. The example data set comes from the Google Location History of a single individual. It spans from January 2013 to January 2017 and contains  814 941  measurements.  The data set contains a multitude of variables, including inferred activity and velocity. We will focus on measurements of latitude, longitude, accuracy (defined below). All measurements are paired with a timestamp.
+
+### Aggregate measures
+
+Social scientists are most interested in aggregating spatiotemporal data to more socially relevant information, such as distance travelled. As we discussed earlier, aggregations without data processing can be highly biased. However, as an example we calculate time spent at home of the user for each day of the week in the month of February (\@ref(fig:aggrePlot)). Between individuals, time spent at home has been found to be a reliable predictor of extraversion [@harari_using_2016]. 
+
+```{r, aggrePlot,echo = FALSE,fig.cap="Proportion of time spent at home in February 2017. We estimate this by calculating the mean lattitude and longitude for every 5 minute time period in the month. Missing values are filled in by the previous observed value. Behavioural trends are evident, the user spends more time at home on weekends than on weekdays. Moreover, the variance is greater on weekends, due to travel.",out.width = '100%'}
+include_graphics("img/timeUse.png")
+```
+
+
+### Accuracy in location logs 
+
+Google location history provides a measure of accuracy that is given in meters such that it represents the radius of a 67% confidence circle. In the example data set the distribution of accuracy is highly right skewed, with a median of 28, $\mu = 127$ and the maximum value at 26 km. @palmius_detecting_2017 note that in their Android based custom logs inaccurate location values are interspersed between more accurate location values at higher sample rates per hour. We observe similar patterns in secondary logs. \@ref(fig:accuracyPlot) shows how accuracy can vary as a function of user behaviour, time and location. Inaccurate measures are often followed by more accurate measures.  Most notably, low accuracy often (but not always) is  associated with movement (\@ref(fig:accuracyPlot2)). Stationary accuracy varies depending on phone battery level, wifi connection and user phone use. There are several recurring low-accuracy points, possibly the result of cell-phone tower triangulation. 
+
+```{r, accuracyPlot,echo = FALSE,fig.cap="Measurement accuracy of each logged measurement of a morning journey on February 15th 2017. This includes all measurements from midnight to midday. The red circles denote the accuracy of all logged measurement points (the raw data). The points connected in time are connected by a line. The blue line shows the path without the most inaccurate (accuracy > 400 meters) points filtered out. The red line shows the path with all measurements included. ",out.width = '100%'}
+include_graphics("img/journeyTillMiddayBoaz.png")
+```
+
+
+```{r, accuracyPlot2, echo=FALSE, fig.cap="Measures of user activity and measurement accuracy on February 15th 2017.The upper chart shows the distance from the next measured point in meters over the course of the day. All journeys are marked with a red line. The first peak corresponds to the first journey from the user's home to a gym around 8am. The second, smaller peak before 10 reflects a journey from the gym to the nearby lecture theatre. Both journeys can be seen in Figure 1. All other journeys are not shown in Figure 1. The large jump between journey 5 and 6 is measurement error. The lower chart shows the accuracy over the course of the day. The figure shows that measurement inaccuracy is sometimes related to the movement of the individual.",out.width = '100%'}
+include_graphics("img/accuracyLocShift.png")
+
+```
+
+### Missingness
+
+Over 54% of the data is missing for the entire duration of the log. This may be misleading as there are several long periods with no measurements whatsoever (see Figure \@ref(fig:longMeasurementsPerDay)). For days which were not entirely missing, approximately 22% of all five minute segments were missing. The structure of missingness of a day with measurements is shown in Figure \@ref(fig:measurementsPerDay). As you can see, there are several long periods over the course of the log for which there are no measurements. Moreover, even during a single day there are continuous periods where there is missing data, mostly during the late hours of the night in this case. 
+
+```{r, longMeasurementsPerDay,echo = FALSE,fig.cap="Example of missing data over the entire duration of the log. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information. These points are filled with red and lie on the x-axis.",out.width = '100%'}
+
+include_graphics("img/missingdayBoaz5min.png")
+
+```
+
+```{r, measurementsPerDay,echo = FALSE,fig.cap="Example of missing data on February 15th 2017. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information. These points are filled with red and lie on the x-axis.",out.width = '100%'}
+#fix width
+include_graphics("img/missingBoaz5minExample.png")
+```
+
+# Methods
+
+## Two-dimensional projections and notation
+
+GPS measurements provide us with coordinates on the surface of the earth. Because most mobility metrics are computed for data in $\mathbb{R}^2$,  we are interested in mapping these $\mathbb{R}^3$ measurements on a 2D Euclidean plane. Projecting three dimensional measurements onto a two dimensional plane results in distortion. To minimise errors we borrow an error minimising projection method from @barnett_inferring_2016.
+
+Having thus converted lattitude and longitude onto coordinates unique to each individual, let a person's true location on this two-dimensional plane be $G(t) = [G_x(t) G_y(t)]$ where $G_x(t)$ and $G_y(t)$ denote the location of the individual at time $t$ on the x-axis and y-axis respectively. Moreover, let $D \in \mathbb{R}^2$ be the recorded data containing lattitude and longitude. In addition, let $a$ denote the estimated accuracy of the recorded data.  accuracy. $G(t)$, $D$ and $a$ are indexed by time labled by the countable set $t = t_1 < ... < t_{n+1}$. For simplicity, let each entry in the discrete index set $t$ represent a 5 minute window. The measure of accuracy $a_t$ is given in meters such that it represents the radius of a 67% confidence circle. If $D_t = \emptyset$ it is considered *missing* and it is not missing otherwise. 
+
+When several data sets are available from individuals living in overlapping areas we can construct a $t \times i$ matrix $M$ where the entry $M(t,i)$ contains $G(t)$ for the individual $i$.
+
+## Selecting candidate models
+
+There is no golden standard or established practice in how to deal with missing data in GPS logs. Researchers are generally vague about what practices they follow [@jankowska_framework_2015]. Ostensibly this is because they are unaware of possible solutions. In an attempt to elucidate the topic, we explore potential solutions.  We will argue that extensively used spatiotemporal methods, such as state space models (SSMs), are not well suited to deal with human mobility patterns. We also discuss in detail two approaches which deal explicitly with mobility patterns from custom or secondary logs [ @palmius_detecting_2017 ;@barnett_inferring_2016].
+
+There is a vast literature on using SSMs in spatiotemporal statistics. For example, ecologists have used SSMs to explain how animals interact with their environment [@patterson_statespace_2008]. These models can be quite complex. @preisler_modeling_2004 uses Markovian movement processes to characterise the effect of roads, food patches and streams on cyclical elk movements. The most well studied SSM is the Kalman filter, which is the optimal algorithm for inferring linear Gaussian systems. The extended Kalman filter is the de facto standard for GPS navigation [@chen_state_2013]. The advantage of state space models is that they are flexible, deal with measurement inaccuracy, include information from different sources and can be used in real time.
+
+For us, the main limitation of SSMs is that they ignore regular movement routines.  For instance, humans tend to go to work on weekdays and sleep at night. Because SSMs are based on the Markov property, they cannot incorporate this information. The estimated location $G(t)$ at timepoint $t$ is often based only upon measurements $D_t$, $D_{t-1}$ and ignores all $D_{t-i}|i\geq2$. Hierarchical structuring and conditioning on a larger context have been suggested as ways to add periodicity to Markovian models. These solutions are often computationally intractable or unfeasible [@sadilek_far_2016]. For this reason we do not consider SSMs to be useful for imputing missing data. Nonetheless, they could be of use in filtering noise.
+
+In climate or geological research spatiotemporal imputation methods are often used. For instance, the CUTOFF method estimates missing values using the nearest observed neighbours [ @feng_cutoff:_2014 ]. The authors illustrate their example using rainfall data from gauging stations across Australia. Similarly, @zhang_application_2017 use a variety of machine learning methods to impute missing values. The example provided relates to underground water data. Generally these models assume fixed measurement stations (such as rainfall gauging stations).  
+
+For this reason they cannot be easily applied to missing mobility tracks. @feng_cutoff:_2014 claim their model could be used to establish mobility patterns. This may be possible by dividing the sample space into rasters. Each raster would be analogous to a measurement station. These artificial stations could "measure" the probability of the individual being there. To our knowledge such models have not been implemented for mobility traces and seems computationally inefficient.
+
+On the other hand, a few researchers have explicitly attempted to impute missing data from human mobility patterns. @palmius_detecting_2017 deal with the measuremement inaccuracy of $D$ in custom logs by removing from the data set all unique low-accuracy $a$ data points that had  $\frac{d}{dt}D > 100 \frac{km}{h}$. Subsequently the researchers down sample the data to a sample rate of 12 per hour using a median filter. Moreover, @palmius_detecting_2017 explain:
+
+>"If the standard deviation of [$D$] in both latitude and longitude within a 1 h epoch was less than 0.01 km, then all samples within the hour were set to the mean value of the recorded data, otherwise a 5 min median filter window was applied to the recorded latitude and longitude in the epoch".
+
+Missing data was imputed using the mean of measurements close in time if the participant was recorded within 500m of either end of a missing section and the missing section had a length of $\leq 2h$ or $\leq 12h$ after 9pm. 
+
+@barnett_inferring_2016 follow a different approach which is, to the best of our knowledge, the only pricipled approach to dealing with missing data in human mobility data. @barnett_inferring_2016 work with custom logs where location is measured for 2 minutes and subsequently not measured for 10 minutes. In the words of the authors, @barnett_inferring_2016 handle missing data by:
+
+> "simulat[ing] flights and pauses over the period of missingness where the direction,
+duration, and spatial length of each flight, the fraction of flights versus the fraction of
+pauses, and the duration of pauses are sampled from observed data."
+
+This method can be extended to imputing the data based on temporally, spatially or periodically close flights and pauses. In other words, for a given missing period, the individual's mobility can be estimated based on measured movements in that area, at that point in time or movements in the last 24 hours (*circadian proximity*).
+
+### Datasets & Analyses
+
+The data used to train the imputation methods was collected between 2013 and 2017 on different Android devices from several individuals (table 1).
+
+```{r datadetailsTable, echo = F}
+datadetails <- readRDS("tempdata/datadescriptives.rds")
+datadetails <- datadetails[,-7] #remove last column for now
+kable(datadetails,digits = 2,col.names = c("Log duration",
+                                           "Logged days",
+                                           "Observations",
+                                           "Missing days",
+                                           "Missing data",
+                                           "Mean Accuracy"),
+      caption = "Table with descriptives about the data sets used to build the imputation methods. Missing data stands for the proportion of missing 5 minute windows within days that were not missing entirely.")
+```
+
+In addition to the secondary logs, participants also volunteered to carry with them a specialised GPS tracker for a week. This specialised log was used to evaluate the models. 
+
+Analyses were performed using R and a multitude of other statistical packages [@base;@ggplot2;@dplyr;@sp1;@sp2].
+
+### Data pre-processing & filtering
+
+The goal of filtering was to remove noise from the measurements and to aggregate multiple measurements into 12 per hour. Three different filtering methods were tested:
+
+1. The filtered rolling-median downsampling method described by @palmius_detecting_2017.
+2. A weighted mean approach taking $f(a)$ as a weight.
+3. A Kalman filter commonly used for GPS measurements [@doust_smoothing_2013].
+
+The output of all of these methods was taken as the input of the imputation methods.
+
+### Imputation methods
+
+Three imputation methods were selected in order to cover a wide range of techniques applied in the literature:
+
+1. Mean imputation as described by @palmius_detecting_2017.
+2. The model developed by @barnett_inferring_2016 using both spatial and temporal proximity.
+3. Simple linear interpolation was used as a benchmark model.
+ 
+### Evaluation criteria
+
+The entire length of the secondary logs were used as a training set. The specialised logs were used as a test set. The missing data imputation models were evaluated both directly, and on two computed measures: amount of trips made and distance traveled.
+
+The direct evaluation involved calculating the error of each $D_t$ compared to $G(t)$ approximated by the specialised log. The error measures used were root mean square error (RMSE) and mean absolute error (MAE).
+
+The evaluation on computed measures involved calculating a mobility trace following the rectangular method of @rhee_human_2007 for each imputed dataset. Like @barnett_inferring_2016 we calculate bias by substracting the estimated measure under each approach for the same measure calculated on the full data. For simulation-based imputation approaches a mean value over 100 samples was taken.
+
+Each imputation method used each of the three filtering methods as an input. Thus in the end we end up with eight methods to evaluate, three for each filtering method as well as four for each imputation method.
+
