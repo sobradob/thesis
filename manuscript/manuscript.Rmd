@@ -161,7 +161,7 @@ Thus, all measurements $D$ were are then assigned to a discrete bin on the perso
 
 #### Classification
 
-At this point the objective of PMMI is to take all the information available about the mobility history of an individual and impute the missing value. In this implementation we trained an artificial neural network (ANN) to do so. The input variables to the ANN are:
+At this point the objective of PMMI is to take all the information available about the mobility history of an individual and impute the missing value. In this implementation we trained an artificial neural network (ANN) to do so. For more information on the precise architecture of the artificial neural network please consult the appendix. The input variables to the ANN are:
 
 1. The previous and subsequent observed bin.
 2. The distance in time to the next & previous bin.
@@ -171,79 +171,52 @@ At this point the objective of PMMI is to take all the information available abo
 
 For the encoding of the time of day we took the cosine and the sine transforms of the amount of seconds that have elapsed after midnight [@london]. This is necessary so that the model can understand that one second past midnight and one second before midnight are in fact two seconds away from each other.  
 
-For more information on the precise architecture of the artificial neural network please consult the appendix.
-
-For a missing timepoint at $D_t \in \emptyset$, the output of the model is a set of probability estimates associated with every location cluster. That is, for each missing timepoint the model returns a vector of probability estimates (with one estimate per cluster) associated with where the individual is. 
+For a missing timepoint at $D_t \in \emptyset$, the output of the model is a set of probability estimates associated with every location cluster. That is, for each missing timepoint the model returns a vector of probability estimates (with one estimate per bin) associated with where the individual is. 
 
 ### Datasets & Analyses
 
-The data used to train the imputation methods was collected between 2013 and 2017 on different Android devices from several individuals (table 1).
+The secondary location log used to train the imputation methods was collected between 2013 and 2017 on different Android devices from a single individual. About 54% of the data is missing for the entire duration of the log. This may be misleading as there are several long periods with no measurements whatsoever (see Figure \@ref(fig:longMeasurementsPerDay)). For days which were not entirely missing, approximately 22% of all five minute segments were missing. The structure of missingness of a day with measurements is shown in Figure \@ref(fig:measurementsPerDay). As you can see, there are several long periods over the course of the log for which there are no measurements. Moreover, even during a single day there are continuous periods where there is missing data, mostly during the late hours of the night in this case. The median sampling frequency per day for non-missing days is around 0.006 Hz.
 
-```{r datadetailsTable, echo = F, eval = F}
-datadetails <- readRDS("tempdata/datadescriptives.rds")
-datadetails <- datadetails[,-7] #remove last column for now
-kable(datadetails,digits = 2,col.names = c("Log duration",
-                                           "Logged days",
-                                           "Observations",
-                                           "Missing days",
-                                           "Missing data",
-                                           "Mean Accuracy"),
-      caption = "Table with descriptives about the data sets used to build the imputation methods. Missing data stands for the proportion of missing 5 minute windows within days that were not missing entirely.")
+```{r, measurementsPerDay,echo = FALSE,fig.cap="Example of missing data on February 15th 2017. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information. These points are filled with red and lie on the x-axis.",out.width = '100%'}
+#fix width
+include_graphics("img/missingdayBoaz5min.png")
 ```
 
-Analyses were performed using R and a multitude of other statistical packages [@base;@ggplot2;@dplyr;@sp1;@sp2]. **add packages**
+For simplicity, we only used a time period when the indivdual was living in the Netherlands in the model. Analyses as well as implementations and adaptions @palmius_detecting_2017's and @barnett_inferring_2016's model were performed using R and a multitude of other statistical packages [@base;@ggplot2;@dplyr;@sp1;@sp2]. **add packages** All the code is available on a public repository.
 
 ### Results & Evaluation Metrics
 
 The results will consist of multiple steps:
 
-1. A descriptive documentation of the characteristics of missingness in secondary logs.
-2. Evaluating the performance of the modified STS algorithm in extracting paths as well as two rival methods.
-3. Comparing the performance of MYMETHOD using a) baseline models b) performance with randomly removed data in comparison to the aforementioned methods [@palmius_detecting_2017; @barnett_inferring_2016] and c) objective ground-truth data.
+1. Evaluating the performance of the map building and assigning functions.
+2. Comparing the performance of PMMI using a) baseline models b) performance with randomly removed data in comparison to the aforementioned methods [@palmius_detecting_2017; @barnett_inferring_2016] and c) objective ground-truth data.
 
-#### Missingness
+#### Map building & binning evaluation
 
-With respect to the characteristics of missingness we will report how often data is missing and whether missingness displays temporal or spatial patterns.
+Before we can evaluate the accuracy of the imputations, it is essential to evaluate how well noise in the data has been cleaned. Otherwise we run the risk of overfitting the model in the sense that we will measure the extent to which an imputation method can correctly impute measurement noise within $D_t$ instead of true location $G(t)$.
 
-#### Binning evaluation
-
-In order to evalute the modified STS algorithm we will first visually evaluate the paths and pause locations. A visual evaluation of paths is an established way to heuristically check their accuracy (*add reference*). Then, let the average distance between the actual measured point and the binned point be the *deviation distance* $d$. With respect to the deviation distance, we expect:
+In order to evalute the map building and binning we will first visually evaluate the paths and pause locations. A visual evaluation of paths superimposed on is an established way to heuristically check their accuracy (*add reference*). Then, let the average distance between the actual measured point and the binned point be the *deviation distance* $\delta_{\text{dev}}$. With respect to the deviation distance $\delta_{\text{dev}}$, we expect:
 
 1. A positive relationship between the deviation distance and the accuracy of each measurement.
-2. Roughly 67% of the deviation distances $d$ are within accuracy $a$ of each measurement.
+2. Roughly 67% of the deviation distances $\delta_{\text{dev}}$ are within accuracy $a$ of each measurement.
 
 #### Imputation algorithm performance
 
-We treat missing data imputation as a classification problem, taking 25% of all measurements at random and eliminating them from the sample, recalculating features and computing classification accuracy. Moreover, we evaluate the performance of the imputation algorithm for the entire duration of the log with in comparison to a naive baseline models where for each missing period we predict the prevous non-missing cluster.
+We will compare the peformance of PMMI, @palmius_detecting_2017 and  @barnett_inferring_2016. In addition, we will also compute a naive model, which simply imputes as the missing value the previous observed value. To compare the performance of these methods we will remove 25% of measured time intervals at random within a four week period. We will make our comparisons for intervals of 5 minutes, 1 hour and 1 day. In other words, we will remove 25% of time intervals at random, while varying the size of the time intervals removed.
 
-To compare the performance of the different missing data imputation algorithms we will remove 25% of measured time intervals at random within a four week period. We will make our comparisons for intervals of 5 minutes, 1 hour and 1 day. In other words, we will remove 25% of time intervals at random, while varying the size of the time intervals removed.
+To compare all methods with each other we will compute a distance measure (how far was the removed location from the predicted location). For PMMI's imputations we will use a weighted mean for the distance measures whereby each 5 minute period is weighted equally. This is necessary because the other two model estimate far fewer values than PMMI. While @barnett_inferring_2016's and @palmius_detecting_2017's models estimate 12 measurements for each missing hour, PMMI estimates as many measurements as there are in the log. When individuals go to unfrequently travelled locations they tend to use their phone's location services more than 100 more times, which leads to more measurements, and hence more imputed values. Hence, if the weights are not used PMMI is succeptible to error overestimates which are related to measurement frequency in a way that the other two methods are not.
 
-To compare all methods with each other we will compute a distance measure (how far was the removed location from the predicted location). For MYMETHOD's imputations we will use a weighted mean for the distance measures whereby each 5 minute period is weighted equally. This is necessary because Barnett's and Palmius' model estimate far fewer values than MYMETHOD. While Barnett's and Palmius' models estimate 12 measurements for each missing hour, MYMETHOD estimates as many measurements as there are in the sample. When individuals go to unfrequently travelled locations they tend to look use their phone's location services more, which leads to more measurements, hence more imputed values. Hence, if the weights are not used MYMETHOD is succeptible to error overestimates which are related to measurement frequency in a way that the other two methods are not. 
+In addition, other measures we will report for PMMI are accuracy (in what percentage of the cases was the appropriate cluster predicted) and the expected distance. The expected distance is the crossproduct of the estimated probabilities that the individual is at a given cluster and the distances between the clusters to the true cluster. For example, if the true location of an individual is cluster A (cluster A is 10 meters away from cluster B) and the model assigns a probability of 0.9 at cluster A and 0.1 at cluster B, then the expected distance would be 1 meter. 
 
-In addition, other measures we will report for MYMETHOD are accuracy (in what percentage of the cases was the appropriate cluster predicted) and the expected distance. The expected distance is the crossproduct of the estimated probabilities that the individual is at a given cluster and the distances between the clusters to the true cluster. For example, if the true location of an individual is cluster A (cluster A is 10 meters away from cluster B) and the model assigns a probability of 0.9 at cluster A and 0.1 at cluster B, then the expected distance would be 1 meter. 
-
-Finally, we will take objective real world data and compare it to predicted values. We will use information from the Dutch public transportation card, which provides users with timestamped data of when and where they board, change lines or leave public transportation.
+Finally, we will take objective real world data and compare it to predicted values. We will use information from the Dutch public transportation card as objective real world data. The Dutch public transportation card provides users with timestamped data of when and where they board, change lines or leave public transportation.
 
 ## Results
 
-### A descriptive documentation of the characteristics of missingness
-
-This is an example of a smartphone secondary log. About 54% of the data is missing for the entire duration of the log. This may be misleading as there are several long periods with no measurements whatsoever (see Figure \@ref(fig:longMeasurementsPerDay)). For days which were not entirely missing, approximately 22% of all five minute segments were missing. The structure of missingness of a day with measurements is shown in Figure \@ref(fig:measurementsPerDay). As you can see, there are several long periods over the course of the log for which there are no measurements. Moreover, even during a single day there are continuous periods where there is missing data, mostly during the late hours of the night in this case. The median sampling frequency per day for non-missing days is around 0.006 Hz.
-
-```{r, measurementsPerDay,echo = FALSE,fig.cap="Example of missing data on February 15th 2017. The x-axis denotes time, the y-axis shows how many measurements are made and each point is a five minute window. For this day there were several periods with no information. These points are filled with red and lie on the x-axis.",out.width = '100%'}
-#fix width
-include_graphics("img/missingdayBoaz5min.png")
-
-```
-
-
-### Modified STS performance in comparison to other binning methods
-
-Before we can evaluate the model, it is essential to evaluate how the noisy data has been restructured. Without this evaluation model accuracy measures could be misleading, as a good performance may simply be modelling noise. Therefore we will assess the performance of the modified STS binning method and compare it to alternatives.
+### Map building & binning evaluation
 
 We used the following parameters to extract pauses: an accuracy limit $a_{\text{Pause lim}}$ of 250 meters, a time limit $t_{\text{Pause lim}}$ of 300 seconds, a distance limit of $d_{\text{Pause lim}}$ 50 meters and a minimum pause duration limit $\delta_{\text{Pause lim}}$ of 100 seconds. Moreover, to extract path clusters we used the parameters: $a_{\text{Path Lim}} = 150  \text{meters}$ and $d_{\text{Path Lim}} =300  \text{meters}$.
 
-Importantly, we did not use the entire length of the log, but rather only the time periods when the individual was in the Netherlands. This was done to reduce computation time. 
+The selection of these parameters was more-or-less heuristic. 
 
 When selecting parameters there is a trade off is between resolution and accuracy. This is because an increase in resolution comes at the expense of accuracy. For instance, by increasing the clustering distance parameter $d_{\text{Pause lim}}$ we can extract more valid pause locations at the expense of falsely categorising certain measurements to the wrong cluster. This is illustrated in Figures \@ref(fig:pauseLocUithof1) and \@ref(fig:pauseLocUithof2).
 
