@@ -46,6 +46,7 @@ preImp <- downsampled %>% mutate( timestampMs = as.numeric(time_5min),
 # create NA's for variables where it makes sene
 home<- c(5.113919,52.10421)
 
+#add additional features needed for the imputation
 preImp$distEndHome<- apply(preImp, 1, FUN = function(row) {
   raster::pointDistance(home,
                         c(as.numeric(as.character(row["lonMissEnd"])), as.numeric(as.character(row["latMissEnd"]))),
@@ -150,8 +151,3 @@ leaflet() %>%
 # add gitignore
 # push to git
 # debug benin 
-# finish document and send to Palmius & Lugtig
-# finish document for Barnett & Onella 
-# send to lugtig and Ian
-
-# look into neural netowrks. 

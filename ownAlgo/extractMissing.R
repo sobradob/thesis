@@ -1,4 +1,6 @@
 # extract missing values\
+# unfinished, using the nnFeatureFunc to do this
+
 
 library(padr)
 library(tidyr)
@@ -18,3 +20,13 @@ data2 %>% top_n(250) %>%
 
 
 # turn the above into a function
+
+
+# take the time and the timestamp, with NA's
+
+train <- data  %>%
+  slice(remove_ind) %>%
+  select(time, timestampMs)
+  
+  
+  

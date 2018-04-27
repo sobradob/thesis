@@ -1,0 +1,98 @@
+﻿Date;Time;Location;Type
+02-03-2017;12:22;Utrecht Centraal;Check-in
+02-03-2017;13:07;Centraal Station;Check-in
+02-03-2017;17:49;Muziekgeb. Bimhuis;Check-in
+02-03-2017;17:55;Centraal Station;Check-in
+02-03-2017;21:27;Nieuwmarkt;Check-in
+02-03-2017;21:34;Amsterdam Amstel;Check-in
+02-03-2017;13:05;Amsterdam Centraal;Check-out
+02-03-2017;13:12;Muziekgeb. Bimhuis;Check-out
+02-03-2017;17:51;Centraal Station;Check-out
+02-03-2017;17:59;Nieuwmarkt;Check-out
+02-03-2017;21:34;Amstelstation;Check-out
+02-03-2017;22:08;Utrecht Centraal;Check-out
+06-03-2017;8:17;Utrecht Centraal;Check-in
+06-03-2017;15:29;Hengelo;Check-in
+06-03-2017;10:06;Hengelo;Check-out
+06-03-2017;17:26;Utrecht Centraal;Check-out
+07-03-2017;13:55;Utrecht Centraal;Check-in
+07-03-2017;14:39;Centraal Station;Check-in
+07-03-2017;18:24;Muziekgeb. Bimhuis;Check-in
+07-03-2017;18:28;Amsterdam Centraal;Check-in
+07-03-2017;14:35;Amsterdam Centraal;Check-out
+07-03-2017;14:41;Muziekgeb. Bimhuis;Check-out
+07-03-2017;19:09;Utrecht Centraal;Check-out
+08-03-2017;9:28;Utrecht, Willem Dreeslaan;Check-in
+08-03-2017;9:39;Utrecht, Vredenburg;Check-in
+08-03-2017;16:24;Utrecht, Heidelberglaan;Check-in
+08-03-2017;16:48;Utrecht, Sint Jacobsstraat;Check-in
+08-03-2017;9:32;Utrecht, Oudenoord;Check-out
+08-03-2017;9:53;Utrecht, Botanische Tuinen;Check-out
+08-03-2017;16:39;Utrecht, Vredenburg;Check-out
+08-03-2017;16:54;Utrecht, Draaiweg;Check-out
+09-03-2017;12:21;Utrecht, Willem Dreeslaan;Check-in
+09-03-2017;12:32;Utrecht Centraal;Check-in
+09-03-2017;13:08;Centraal Station;Check-in
+09-03-2017;16:15;Muziekgeb. Bimhuis;Check-in
+09-03-2017;16:19;Amsterdam Centraal;Check-in
+09-03-2017;23:47;Amsterdam Centraal;Check-in
+09-03-2017;12:29;Utrecht, CS Jaarbeursplein (Perron G5);Check-out
+09-03-2017;13:05;Amsterdam Centraal;Check-out
+09-03-2017;13:10;Muziekgeb. Bimhuis;Check-out
+09-03-2017;16:18;Centraal Station;Check-out
+09-03-2017;17:09;Amsterdam Centraal;Check-out
+10-03-2017;11:51;Utrecht, Willem Dreeslaan;Check-in
+10-03-2017;12:06;Utrecht, Vredenburg;Check-in
+10-03-2017;14:47;Utrecht, Heidelberglaan;Check-in
+10-03-2017;0:24;Utrecht Centraal;Check-out
+10-03-2017;11:56;Utrecht, Sint Jacobsstraat;Check-out
+10-03-2017;12:21;Utrecht, Heidelberglaan;Check-out
+10-03-2017;15:00;Utrecht, Janskerkhof;Check-out
+11-03-2017;12:36;Utrecht, Willem Dreeslaan;Check-in
+11-03-2017;12:56;Utrecht Centraal;Check-in
+11-03-2017;13:39;Amstelstation;Check-in
+11-03-2017;14:32;Leidseplein;Check-in
+11-03-2017;12:49;Utrecht, CS Jaarbeursplein (Perron G5);Check-out
+11-03-2017;13:27;Amsterdam Amstel;Check-out
+11-03-2017;13:55;Museumplein;Check-out
+11-03-2017;14:37;1e Con. Huygensstraat;Check-out
+12-03-2017;1:18;Amsterdam Centraal;Check-in
+12-03-2017;2:01;Amsterdam Centraal;Check-in
+12-03-2017;16:35;Utrecht Centraal;Check-in
+12-03-2017;17:11;Centraal Station;Check-in
+12-03-2017;22:04;Rhijnvis Feithstraat;Check-in
+12-03-2017;22:22;Amsterdam Centraal;Check-in
+12-03-2017;23:00;Utrecht, CS Jaarbeursplein (Perron G5);Check-in
+12-03-2017;1:20;Amsterdam Centraal;Check-out
+12-03-2017;3:03;Utrecht Centraal;Check-out
+12-03-2017;17:07;Amsterdam Centraal;Check-out
+12-03-2017;17:32;Rhijnvis Feithstraat;Check-out
+12-03-2017;22:21;Centraal Station;Check-out
+12-03-2017;22:52;Utrecht Centraal;Check-out
+12-03-2017;23:13;Utrecht, Willem Dreeslaan;Check-out
+13-03-2017;10:11;Utrecht, Willem Dreeslaan;Check-in
+13-03-2017;10:21;Utrecht, Vredenburg;Check-in
+13-03-2017;12:42;Utrecht, Heidelberglaan;Check-in
+13-03-2017;15:00;Utrecht Centraal;Check-in
+13-03-2017;10:14;Utrecht, Sint Jacobsstraat;Check-out
+13-03-2017;10:35;Utrecht, Heidelberglaan;Check-out
+13-03-2017;12:55;Utrecht, Janskerkhof;Check-out
+13-03-2017;15:10;Utrecht Centraal;Check-out
+14-03-2017;11:02;Utrecht Overvecht;Check-in
+14-03-2017;11:18;Bilthoven;Check-out
+23-03-2017;18:24;Utrecht, Draaiweg;Check-in
+23-03-2017;18:39;Utrecht Centraal;Check-in
+23-03-2017;18:33;Utrecht, CS Jaarbeursplein (Perron G5);Check-out
+23-03-2017;19:21;Amsterdam Centraal;Check-out
+24-03-2017;0:03;Amsterdam Centraal;Check-in
+24-03-2017;0:59;Utrecht, CS Jaarbeursplein (Perron G5);Check-in
+24-03-2017;0:04;Amsterdam Centraal;Check-out
+24-03-2017;0:58;Utrecht Centraal;Check-out
+24-03-2017;1:07;Utrecht, Willem Dreeslaan;Check-out
+27-03-2017;8:15;Utrecht Centraal;Check-in
+27-03-2017;10:09;Hengelo, Centraal Station;Check-in
+27-03-2017;12:58;Enschede, Kennispark/UT;Check-in
+27-03-2017;13:06;Hengelo;Check-in
+27-03-2017;10:06;Hengelo;Check-out
+27-03-2017;13:05;Hengelo, Centraal Station;Check-out
+27-03-2017;14:44;Utrecht Centraal;Check-out
