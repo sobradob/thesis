@@ -1,0 +1,23 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[htb]
+\begin{center}
+\begin{threeparttable}
+\caption{\label{tab:resulttable}Distance in meters between the removed time period and the imputed value.}
+\begin{tabular}{lllllll}
+\toprule
+ & \multicolumn{2}{c}{Five minutes} & \multicolumn{2}{c}{One Hour} & \multicolumn{2}{c}{One Day} \\
+\cmidrule(r){2-3} \cmidrule(r){4-5} \cmidrule(r){6-7}
+ & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median}\\
+\midrule
+Barnett \& Onella & 82 & 4 & 345 & 6 & 9,273 & 12\\
+Palmius & 43 & 0 & 497 & 4 & NA & NA\\
+PPMI & 269 & 0 & 908 & 0 & 5,757 & 0\\
+Naive Baseline & 426 & 0 & 1,502 & 0 & 14,266 & 1,288\\
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+\end{center}
+\end{table*}
+\efloatseparator
+ 

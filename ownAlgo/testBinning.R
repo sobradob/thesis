@@ -184,8 +184,7 @@ fin %>%  filter( distClustMin  > 5000) %>%
 allPoints %>%
   leaflet() %>%
   addTiles() %>% 
-  addCircles(lng = ~lon, lat = ~lat, color = ~type)
-
+  addCircles(lng = ~lon, lat = ~lat, color = ~type) 
 checkPath(test3, start = 44, end = 32,clusterMap)
 
 # to do: check single pass clusters

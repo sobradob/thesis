@@ -12,7 +12,7 @@ file.sources <- list.files(c("functions"),
 sapply(file.sources,source,.GlobalEnv)
 
 #select the month of march
-
+data <-  fin
 dataExample <- select(data,time,lat,lon,accuracy,nextMeas) %>%
   arrange(time) %>% 
   mutate( nextLon = lead(lon),

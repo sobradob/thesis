@@ -1,4 +1,5 @@
 # objective data comparison
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # read in data
 Sys.time()# 14:46:00
@@ -9,8 +10,6 @@ objLog<- read_csv2("objectiveLog.csv")
 objKey<- read_csv2("objectiveKey.csv") %>% select(Location,Cluster)
 
 objKey<- left_join(objKey,allPoints, by = c("Cluster" = "clust")) %>% select(Location,Cluster,lon,lat)
-
-strftime(paste0(objLog$Date," ",objLog$Time),"%d-%m-%Y %H:%M:%S")
 
 
 
@@ -216,3 +215,4 @@ imputedP %>% slice(remove_ind) %>%
   left_join(., objLog %>%thicken("5 min", "thick5") %>% mutate(timestampMs = as.numeric(thick5)), by = "timestampMs") %>% 
   mutate( dist = raster::pointDistance(p1 = as.matrix(cbind(impLon,impLat)), p2 = as.matrix(cbind(lon,lat)),lonlat = T )) %>% 
   summary()
+

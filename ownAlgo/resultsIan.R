@@ -13,6 +13,7 @@ file.sources = list.files(pattern="*.R",path = "gpsmobility/R/")
 setwd("gpsmobility/R/")
 sapply(file.sources,source,.GlobalEnv)
 
+data <- fin %>% select(timestampMs,time,lat,lon,accuracy)
 downsampledIan <- downSampleMean(data,interval = '300 sec') #downsamples and adds XY coordinates
 
 
@@ -20,30 +21,34 @@ downsampledIan <- downSampleMean(data,interval = '300 sec') #downsamples and add
 
 # 5 minute bits
 
+Sys.time()
 d2<- downsampledIan %>%
   mutate( time = as.POSIXct(timestampMs, origin="1970-01-01")) %>% 
   pull(time)
 
 remove_ind <- which(as.character(d2) %in% remove_ind_5min[[2]])
 
-downsampled5minRemoved<- downsampledIan
+downsampleSys.time()
+d5minRemoved<- downsampledIan
 downsampled5minRemoved[remove_ind,c("lon","lat","x_v","y_v")] <- NA
 downsampled5minRemoved[remove_ind,c("code")] <- 4
 
 #params
 minpausedur=120
 minpausedist=50
-
+Sys.time()
 mobmatmiss<- pauseFlight(downsampled5minRemoved, r = sqrt(300), w = mean(data$accuracy)) # extracts pauses and flights using algo
+Sys.time()
 mobmatmiss <- mobmatmiss[-nrow(mobmatmiss),] #clean a bit
 
 # Guessing Pauses
-#with example data first day
+Sys.time()
 mobmat = GuessPause(mobmatmiss,mindur=minpausedur,r=minpausedist)
-
+Sys.time()
 obj=InitializeParams(mobmat)
 spread_pars=c(10,1)
 wtype <- "TL"
+Sys.time()
 out3 <- SimulateMobilityGaps(mobmat,obj,wtype,spread_pars) # it is returning NA's only for
 
 evalDf<- evalIan(out3,downsampledIan = downsampledIan)
@@ -132,11 +137,7 @@ wtype <- "TL"
 out3 <- SimulateMobilityGaps(mobmat,obj,wtype,spread_pars)
 evalDf<- evalIan(out3,downsampledIan = downsampledIan)
 
-evalDf[remove_ind,] %>% summary() # median 12 meters mean 9273
+evalDf[remove_ind,] %>% summary() # median 7 meters mean 60 not imputed 282 NA's
 evalDf[remove_ind,]
-library(ggplot2)
-ggplot(evalDf[remove_ind,], aes(x = x, y = y))+
-  geom_point()
 
-ggplot(evalDf[remove_ind,], aes(x = x_v, y = y_v))+
-  geom_point()
+#doing this again cuz it takes ages

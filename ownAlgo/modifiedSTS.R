@@ -18,7 +18,7 @@ test <- data %>% mutate( distanceHome = raster::pointDistance(matrix(c(lon,lat),
                                                               home,
                                                               longlat = T),
                          timestampMs = as.numeric(time))%>%
-  filter(distanceHome < 300000) %>% 
+  filter(distanceHome < 200000) %>% 
   select(time,lon,lat,accuracy, timestampMs,distanceHome) %>%
   arrange(timestampMs)
 
@@ -47,7 +47,9 @@ toClust <- test2 %>% filter( isPause == 1  & !(distMeanEast > 2*meanAcc |
 colnames(toClust) <- c("lon","lat")
 
 # merge all clusters within 300 meters of each other  
-clusterMap <- mergePoints(toClust, d = 300)
+#clusterMap <- mergePoints(toClust, d = 300)
+clusterMap1 <- mergePoints(toClust, d = 150)
+clusterMap2 <- mergePoints(toClust, d = 450)
 
 # all measurements binned into a pause cluster
 test3<- binMeasurements(test,clusterMap)
@@ -56,7 +58,7 @@ test3<- binMeasurements(test,clusterMap)
 test3 <- featureFunc2(test3,test2)
 # all points method of using rasters for computational help
 
-pathClust<- gridFunc(test3)
+pathClust<- gridFunc(test3,d = 500)
 
 routePoints <- pathClust %>% mutate(clust = 1:nrow(pathClust))
 allPoints <- routePoints %>%
@@ -80,4 +82,4 @@ rm(pause,notpause,routePoints,pathClust,test3,clusterMap,toClust,test2)
 Sys.time()
 
 saveRDS(fin,file = "finalBinnedDataNL.rds")
-saveRDS(allPoints, file = "finalAllClusts.rds")
+saveRDS(allPoints, file = "finalAllClusts2.rds")

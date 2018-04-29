@@ -1,10 +1,10 @@
 # daily missing plot 
 
 # by 5 minute version 2
-m5minv2<- all %>%
+m5minv2<- fin %>%
   select(time,accuracy) %>%
   as_tbl_time(index = time) %>%
-  time_filter(2000-01 ~ 2017-06) %>% 
+  filter_time("2000-01" ~ "2017-06") %>% 
   thicken('5 min') %>%
   group_by(time_5_min) %>%
   summarise(measurements = n(),
@@ -23,19 +23,19 @@ m5minv2<- all %>%
 
 exampleMiss<- m5minv2 %>%
   as_tbl_time(index = time2)%>%
-  time_filter(2017-02-15 ~ 2017-02-15) %>%
-  ggplot( aes(x = hour, y=measurements, colour = factor(missing)))+
+  filter_time("2017-02-15" ~ "2017-02-15") %>%
+  ggplot( aes(x = hour, y=measurements))+
   geom_point()+theme_tufte()+
   xlab("")+
   ylab("Measurements")+
   ggtitle("Measurements per 5 minute window",subtitle = "February 15 2017")+
   scale_x_datetime(breaks = date_breaks("4 hour"),
                    minor_breaks=date_breaks("2 hour"),
-                   labels=date_format("%H:%M:%S", tz = "Asia/Singapore"))+
-  scale_colour_manual(values=c("black",muted("red")),labels=c("Not Missing", "Missing"))+
-  labs(x = NULL, colour = "")+xlab("Time")
+                   labels=date_format("%H:%M", tz = "Europe/Budapest"))+
+  labs(x = NULL, colour = "")+xlab("Time")+
+  scale_y_continuous(breaks = seq(0, 9, by = 2), name = "Measurements")
 
-ggsave(exampleMiss,filename = "../img/missingBoaz5minExample.png",device = "png",height = 10, width = 20, units = "cm")
+ggsave(exampleMiss,filename = "../manuscript/img/missin5minExample2018.png",device = "png",height = 10, width = 20, units = "cm")
 
 # randomly select two days
 sample(x = c(13,14,15,16,17),1)#YEAR
