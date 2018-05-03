@@ -4,3 +4,7 @@ ggthemes
 ggplot2
 knitr
 kableExtra
+sp
+leaflet
+raster
+geosphere

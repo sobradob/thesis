@@ -198,3 +198,13 @@ plotBin %>%
   addCircles(lng = ~lon.cluster,lat = ~lat.cluster, color = "#DF2935") %>% 
   addCircles(lng = ~lonF,lat = ~latF, color = "yellow",label = ~as.character(time_5_min))
 
+# CHECK how many measurements are clustered
+lowClust <- (fin %>% group_by(clust) %>% summarise( n = n()) %>% filter(n  == max(n)) %>% pull(clust))
+
+fin %>% 
+  filter( clust %in% lowClust) %>%
+  left_join(.,allPoints,by="clust",suffix=c(".measured",".cluster")) %>% 
+  leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addCircles(lng = ~lon.cluster,lat = ~lat.cluster, color = "#DF2935")
+  

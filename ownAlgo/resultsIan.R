@@ -1,4 +1,5 @@
-# full Ian results 
+# full Ian results take 2
+
 directory <- "/Users/boazsobrado/Desktop/Academic/Utrecht/year2/thesisFiles/harvard/Example"
 setwd(directory)
 
@@ -14,7 +15,7 @@ setwd("gpsmobility/R/")
 sapply(file.sources,source,.GlobalEnv)
 
 data <- fin %>% select(timestampMs,time,lat,lon,accuracy)
-downsampledIan <- downSampleMean(data,interval = '300 sec') #downsamples and adds XY coordinates
+downsampledIan <- downSampleMean(data,interval = '5 min') #downsamples and adds XY coordinates
 
 
 # remove data for results
@@ -28,8 +29,8 @@ d2<- downsampledIan %>%
 
 remove_ind <- which(as.character(d2) %in% remove_ind_5min[[2]])
 
-downsampleSys.time()
-d5minRemoved<- downsampledIan
+Sys.time()
+downsampled5minRemoved<- downsampledIan
 downsampled5minRemoved[remove_ind,c("lon","lat","x_v","y_v")] <- NA
 downsampled5minRemoved[remove_ind,c("code")] <- 4
 
@@ -57,6 +58,11 @@ evalDf<- evalIan(out3,downsampledIan = downsampledIan)
 
 evalDf[remove_ind,] %>% summary() # median 5 meters mean 141
 
+evalDf %>% filter( timestampMs %in% (downsampledIan[remove_ind,"timestampMs"] %>% pull())) %>% 
+  unique() %>%
+  summary()
+
+1-(65/length(remove_ind))
 
 #distA is the deviance score
 
@@ -87,6 +93,10 @@ summary(devianceIan) # mean 343 median 8.21
 
 
 # 1 hour thing
+
+# TO DO: SEPARATE INTO BEFORE MARCH, MARCH AND MARCH.
+
+# march
 removedHours<- remove_ind_hour[[2]]
 
 
@@ -94,24 +104,34 @@ d2<- downsampledIan %>%
   mutate( time = as.POSIXct(timestampMs, origin="1970-01-01")) %>% 
   thicken("hour","hour")
 
-remove_ind <- which(as.character(d2$hour) %in% removedHours)
+remove_ind1hr <- which(as.character(d2$hour) %in% removedHours)
 
 downsampled1hrRemoved<- downsampledIan
-downsampled1hrRemoved[remove_ind,c("lon","lat","x_v","y_v")] <- NA
-downsampled1hrRemoved[remove_ind,c("code")] <- 4
+downsampled1hrRemoved[remove_ind1hr,c("lon","lat","x_v","y_v")] <- NA
+downsampled1hrRemoved[remove_ind1hr,c("code")] <- 4
+
 
 #bug if last line contained in removed sample
-mobmatmiss <- pauseFlight(downsampled1hrRemoved, r = sqrt(300), w = mean(data$accuracy)) # extracts pauses and flights using algo
-mobmatmiss <- mobmatmiss[-nrow(mobmatmiss),] #clean a bit
-mobmat <- GuessPause(mobmatmiss,mindur=minpausedur,r=minpausedist)
+mobmatmiss1hr <- pauseFlight(downsampled1hrRemoved, r = sqrt(300), w = mean(data$accuracy)) # extracts pauses and flights using algo
+mobmatmiss1hr <- mobmatmiss1hr[-nrow(mobmatmiss1hr),] #clean a bit
+mobmat1h <- GuessPause(mobmatmiss1hr,mindur=minpausedur,r=minpausedist)
 
-obj <- InitializeParams(mobmat)
+
+obj <- InitializeParams(mobmat2)
 spread_pars <- c(10,1)
 wtype <- "TL"
-out3 <- SimulateMobilityGaps(mobmat,obj,wtype,spread_pars)
-evalDf<- evalIan(out3,downsampledIan = downsampledIan)
+out31hr <- SimulateMobilityGaps(mobmat2,obj,wtype,spread_pars)
+evalDf1hr<- evalIan(out31hr,downsampledIan = downsampledIan)
 
-evalDf[remove_ind,] %>% summary() # median 6 meters mean 345
+evalDf1hr %>% filter( timestampMs %in% (downsampledIan[remove_ind1hr,"timestampMs"] %>% pull())) %>% 
+  unique() %>%
+  summary()
+
+1-(272/length(remove_ind1hr))
+
+
+d2$hour %>% as.numeric()
+
 
 # 1 day thing
 
@@ -121,23 +141,25 @@ d2<- downsampledIan %>%
   mutate( time = as.POSIXct(timestampMs, origin="1970-01-01")) %>% 
   thicken("day","day")
 
-remove_ind <- which(as.Date(d2$day) %in% as.Date(removedDays))
+remove_indday <- which(as.Date(d2$day) %in% as.Date(removedDays))
 
 downsampled1dayRemoved<- downsampledIan
-downsampled1dayRemoved[remove_ind,c("lon","lat","x_v","y_v")] <- NA
-downsampled1dayRemoved[remove_ind,c("code")] <- 4
+downsampled1dayRemoved[remove_indday,c("lon","lat","x_v","y_v")] <- NA
+downsampled1dayRemoved[remove_indday,c("code")] <- 4
 
-mobmatmiss <- pauseFlight(downsampled1dayRemoved, r = sqrt(300), w = mean(data$accuracy)) # extracts pauses and flights using algo
-mobmatmiss <- mobmatmiss[-nrow(mobmatmiss),] #clean a bit
-mobmat <- GuessPause(mobmatmiss,mindur=minpausedur,r=minpausedist)
+mobmatmissday <- pauseFlight(downsampled1dayRemoved, r = sqrt(300), w = mean(data$accuracy)) # extracts pauses and flights using algo
+mobmatmissday <- mobmatmissday[-nrow(mobmatmissday),] #clean a bit
+mobmatday <- GuessPause(mobmatmissday,mindur=minpausedur,r=minpausedist)
 
-obj <- InitializeParams(mobmat)
+obj <- InitializeParams(mobmatday)
 spread_pars <- c(10,1)
 wtype <- "TL"
-out3 <- SimulateMobilityGaps(mobmat,obj,wtype,spread_pars)
-evalDf<- evalIan(out3,downsampledIan = downsampledIan)
+out3day <- SimulateMobilityGaps(mobmat,obj,wtype,spread_pars)
 
-evalDf[remove_ind,] %>% summary() # median 7 meters mean 60 not imputed 282 NA's
-evalDf[remove_ind,]
+evalDfday<- evalIan(out3day,downsampledIan = downsampledIan)
+
+evalDfday %>% filter( timestampMs %in% (downsampledIan[remove_indday,"timestampMs"] %>% pull())) %>% 
+  unique() %>%
+  summary()
 
 #doing this again cuz it takes ages

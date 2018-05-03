@@ -1,23 +1,18 @@
-\begin{table*}[hbt]
-\ifnextchar[{\eatarg}{}
-[htb]
-\begin{center}
-\begin{threeparttable}
-\caption{\label{tab:resulttable}Distance in meters between the removed time period and the imputed value.}
-\begin{tabular}{lllllll}
+\begin{lltable}
+\begin{longtable}{llllllllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:resulttable}Distance in meters between the removed time period and the imputed value.}\\
 \toprule
- & \multicolumn{2}{c}{Five minutes} & \multicolumn{2}{c}{One Hour} & \multicolumn{2}{c}{One Day} \\
-\cmidrule(r){2-3} \cmidrule(r){4-5} \cmidrule(r){6-7}
- & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median}\\
+ & \multicolumn{3}{c}{Five minutes} & \multicolumn{3}{c}{One Hour} & \multicolumn{3}{c}{One Day} \\
+\cmidrule(r){2-4} \cmidrule(r){5-7} \cmidrule(r){8-10}
+ & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Coverage} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Coverage} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{Median} & \multicolumn{1}{c}{Coverage}\\
 \midrule
-Barnett \& Onella & 82 & 4 & 345 & 6 & 9,273 & 12\\
-Palmius & 43 & 0 & 497 & 4 & NA & NA\\
-PPMI & 269 & 0 & 908 & 0 & 5,757 & 0\\
-Naive Baseline & 426 & 0 & 1,502 & 0 & 14,266 & 1,288\\
+Barnett \& Onella & 240 & 5 & 97\% & 33 & 6 & 88\% & 62 & 6 & 85\%\\
+Palmius & 43 & 9 & 97\% & 497 & 4 & 89\% & NA & NA & 0\%\\
+PPMI & 269 & 0 & 100\% & 908 & 0 & 100\% & 5,757 & 0 & 100\%\\
+Naive Baseline & 426 & 0 & 100\% & 1,502 & 0 & 100\% & 14,266 & 1,288 & 100\%\\
+Home Baseline & 5,599 & 0 & 100\% & 5,667 & 0 & 100\% & 5,757 & 0 & 100\%\\
 \bottomrule
-\end{tabular}
-\end{threeparttable}
-\end{center}
-\end{table*}
+\end{longtable}
+\end{lltable}
 \efloatseparator
  

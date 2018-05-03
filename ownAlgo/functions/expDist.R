@@ -1,5 +1,6 @@
 # calculate expected distance
 
+dClustM <- distMatrix
 expDist <- function(model,x_test,dClustM){
   
   probs <- model %>% predict_proba(as.matrix(x_test))

@@ -120,12 +120,12 @@ imputedP %>% mutate(
 plotAgg <- data.frame(
   home = c(0.536,0.625,.604,.625),
   missing = c(0.126,0.00729,.00971,0),
-  method = c("Raw","Palmius","Barnett", "PMMI")
+  method = c("Raw","Palmius","Barnett & Onnela", "PMMI")
 )
 
 plotAgg$nothome <-  1-(plotAgg$home+plotAgg$missing)
 
-positions <- c("Raw","Barnett", "Palmius", "PMMI")
+positions <- c("Raw","Barnett & Onnela", "Palmius", "PMMI")
 
 plotAgg %>%
   select(method,home,missing,nothome) %>%

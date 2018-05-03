@@ -83,3 +83,8 @@ Sys.time()
 
 saveRDS(fin,file = "finalBinnedDataNL.rds")
 saveRDS(allPoints, file = "finalAllClusts2.rds")
+
+# load 
+
+fin <- readRDS("finalBinnedDataNL.rds")
+allPoints <- readRDS("finalAllClusts2.rds")

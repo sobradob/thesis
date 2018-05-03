@@ -10,12 +10,13 @@ downSampleMean <-
     library(padr)
     
     #  summarise via interval and add coordinates
-    data1 <- cbind(data,as.data.frame(LatLong2XY(data$lat, data$lon)))%>%
-      select(timestampMs,time,lat,lon,accuracy,x_v,y_v) %>% 
-      as_tbl_time(time) %>% 
-      arrange(time) %>% 
+    data1 <- data %>%
+      thicken(interval = interval, colname = 'time2')
+  
+      data1 <- cbind(data1,as.data.frame(LatLong2XY(data1$lat, data1$lon)))%>%
+      select(timestampMs,time,time2,lat,lon,accuracy,x_v,y_v) %>% 
+      arrange(timestampMs) %>% 
       mutate(timestampMs = as.numeric(timestampMs)) %>% 
-      thicken(interval = interval, colname = 'time2') %>%
       group_by(time2) %>%
       summarise(lon = mean(lon),# summarising function
                 lat = mean(lat),
