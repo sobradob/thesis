@@ -26,6 +26,3 @@ pauseFlight <-
     
     return(outmat)
   }
-
-
-#still wierd, pauses don't overlap
