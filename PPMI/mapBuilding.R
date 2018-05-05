@@ -81,10 +81,11 @@ fin<- rbind(pause, notpause) %>% arrange(timestampMs)
 rm(pause,notpause,routePoints,pathClust,test3,clusterMap,toClust,test2)
 Sys.time()
 
+# save data frames if needed
 saveRDS(fin,file = "finalBinnedDataNL.rds")
 saveRDS(allPoints, file = "finalAllClusts2.rds")
 
-# load 
+# load if needed.
 
 fin <- readRDS("finalBinnedDataNL.rds")
 allPoints <- readRDS("finalAllClusts2.rds")
