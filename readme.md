@@ -1,4 +1,13 @@
+
+
 # Missing data in GPS measurements
+
+## Metadata
+
+Author: Boaz Sobrado - [www.boazsobrado.com]
+Supervisor: Dr. Peter Lugtig - [https://www.uu.nl/staff/plugtig]
+
+## Abstract
 
 This is the research archive necessary to make my thesis reproducible. The abstract of my thesis can be read below:
 
@@ -32,10 +41,14 @@ The files in this repository are:
 5. Objective results: all implementations of objective results.
 6. Aggregate results:: all implementations of the aggregation example (time spent at home).
 7. Scripts: used to extract features, create images, process data, etc. . 
-8. Thesis Manuscript: the files necessary to produce the thesis text.
+8. Thesis Manuscript: the files necessary to produce the thesis text as well as the thesis text.
 9. Thesis Report: the files necessary to reproduce the thesis report submitted in 2017
-10. Pre-processing: the script needed to take raw JSON data from Google and convert it to an R data frame.
+10. Pre-processing: the script needed to take raw JSON data from Google Location Services and convert it to an R data frame.
 
 ## Privacy:
 
-The data used in this study is highly sensitive personal data. The individual at risk has given a full informed consent to the researchers to process the data for research purposes.  There is no need for this to be documented as the individual providing the data is also the author. Given that it is not feasible to anonymise personal location data, the data has not been shared. We'd like to point researchers to [Google takeout](https://takeout.google.com/) where they can download their own location history. 
+The data used in this study is highly sensitive personal data, as it contains all location measurements of one individual's smartphone for a span of several years. This data can be used to extract personal information, or can be used to link publicly available anonymised information to an individual. The individual at risk has given a full informed consent to the researchers to process the data for research purposes.  There is no need for this to be documented as the individual providing the data is also the author. Given that it is not feasible to anonymise personal location data, and the subject does not consent to the publication of his data, the data is not been shared. We'd like to point  prospective researchers to [Google takeout](https://takeout.google.com/) where they can download their own location history or that of volunteers.
+
+## Storage responsibilities 
+
+The supervisor is responsible for storing the archive. In addition this archive is publicly available on an [online repository](https://github.com/sobradob/thesis) indefinitely. 
